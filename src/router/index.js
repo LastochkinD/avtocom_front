@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import ClientsView from '../views/ClientsView.vue'
 import CarsView from '../views/CarsView.vue'
+import NomenclatureView from '../views/NomenclatureView.vue'
 
 const routes = [
   {
@@ -28,6 +29,12 @@ const routes = [
     path: '/spravochnik/cars',
     name: 'cars',
     component: CarsView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/spravochnik/nomenclature',
+    name: 'nomenclature',
+    component: NomenclatureView,
     meta: { requiresAuth: true }
   },
   {

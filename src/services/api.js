@@ -71,3 +71,21 @@ export const carsApi = {
     return api.delete(`/cars/${id}`)
   }
 }
+
+export const nomenclatureApi = {
+  getAll(params = {}) {
+    return api.get('/parts_nom/', { params })
+  },
+  getById(id) {
+    return api.get(`/parts_nom/${id}`)
+  },
+  create(data) {
+    return api.post('/parts_nom/', data)
+  },
+  update(id, data) {
+    return api.put(`/parts_nom/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/parts_nom/${id}`)
+  }
+}
