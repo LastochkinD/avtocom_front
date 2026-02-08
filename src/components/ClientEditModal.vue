@@ -115,10 +115,11 @@
               
               <div>
                 <label class="block text-sm text-gray-400 mb-1">Тип дисконтной карты</label>
-                <input
+                <Dropdown
                   v-model="form.CARD_TYPE_ID"
-                  type="text"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  :options="discountCards"
+                  placeholder="Выберите тип карты"
+                  empty-text="Нет доступных карт"
                 />
               </div>
               
@@ -223,8 +224,9 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
-import { clientsApi } from '../services/api'
+import { ref, watch, computed, onMounted } from 'vue'
+import { clientsApi, discountCardsApi } from '../services/api'
+import Dropdown from './Dropdown.vue'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -235,6 +237,8 @@ const emit = defineEmits(['close', 'save'])
 
 const saving = ref(false)
 const error = ref('')
+const discountCards = ref([])
+const loadingDiscountCards = ref(false)
 
 const isPhysicalPerson = computed(() => {
   return props.client?.CL_TYPE === 0
@@ -301,4 +305,23 @@ const save = async () => {
     saving.value = false
   }
 }
+
+const loadDiscountCards = async () => {
+  loadingDiscountCards.value = true
+  try {
+    const response = await discountCardsApi.getAll({ skip: 0, limit: 100 })
+    discountCards.value = response.data.map(card => ({
+      value: card.ID,
+      label: `${card.CARD_NAME} (${card.SKIDKA}%)`
+    }))
+  } catch (err) {
+    console.error('Ошибка при загрузке дисконтных карт:', err)
+  } finally {
+    loadingDiscountCards.value = false
+  }
+}
+
+onMounted(() => {
+  loadDiscountCards()
+})
 </script>

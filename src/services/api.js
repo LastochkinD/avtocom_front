@@ -47,3 +47,9 @@ export const clientsApi = {
     return api.delete(`/clients/${id}`)
   }
 }
+
+export const discountCardsApi = {
+  getAll(params = {}) {
+    return api.get('/discount_cards/', { params })
+  }
+}
