@@ -60,6 +60,14 @@
         </DataTable>
       </div>
     </main>
+
+    <!-- Модальное окно редактирования -->
+    <CarEditModal
+      :is-open="isModalOpen"
+      :car="selectedCar"
+      @close="isModalOpen = false"
+      @save="handleSave"
+    />
   </div>
 </template>
 
@@ -68,12 +76,16 @@ import { ref, onMounted } from 'vue'
 import { carsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import DataTable from '../components/DataTable.vue'
+import CarEditModal from '../components/CarEditModal.vue'
 
 const isLoading = ref(false)
 const cars = ref([])
 const skip = ref(0)
 const limit = ref(100)
 const totalCount = ref(0)
+
+const isModalOpen = ref(false)
+const selectedCar = ref(null)
 
 const columns = [
   { key: 'ID', label: 'ID', align: 'left', textClass: 'text-sm text-gray-400', width: '60px' },
@@ -106,7 +118,15 @@ const loadCars = async (newSkip = 0) => {
 }
 
 const editCar = (car) => {
-  console.log('Редактирование автомобиля:', car)
+  selectedCar.value = car
+  isModalOpen.value = true
+}
+
+const handleSave = (updatedCar) => {
+  const index = cars.value.findIndex(c => c.ID === updatedCar.ID)
+  if (index !== -1) {
+    cars.value[index] = { ...cars.value[index], ...updatedCar }
+  }
 }
 
 onMounted(() => {
