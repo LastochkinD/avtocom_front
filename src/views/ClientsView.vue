@@ -17,133 +17,104 @@
           </button>
         </div>
 
-        <!-- Поиск -->
-        <div class="mb-6">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Поиск клиентов..."
-            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-500"
-          />
-        </div>
+        <!-- Поля фильтрации -->
+        <FilterFields
+          v-model="filters"
+          :fields="filterFields"
+          class="mb-6"
+        />
 
         <!-- Таблица клиентов -->
-        <div class="bg-gray-800/50 rounded-xl border border-gray-700/50 overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-800/80">
-              <tr>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">ID</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Клиент</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Телефон</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Email</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Адрес</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Дата создания</th>
-                <th class="px-4 py-3 text-right text-sm font-semibold text-gray-300">Действия</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-700/50">
-              <tr v-for="client in filteredClients" :key="client.ID" class="hover:bg-gray-700/30 transition-colors">
-                <td class="px-4 py-3 text-sm text-gray-400">{{ client.ID }}</td>
-                <td class="px-4 py-3">
-                  <div class="text-white font-medium">{{ client.CLIENT_NAME }}</div>
-                  <div class="text-sm text-gray-400">{{ client.PRED }}</div>
-                </td>
-                <td class="px-4 py-3 text-sm text-gray-300">{{ client.PHONE || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-300">{{ client.EMAIL || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-300">{{ client.ADDRESS || '-' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-400">{{ formatDate(client.CR_TIME) }}</td>
-                <td class="px-4 py-3 text-right">
-                  <button
-                    class="text-primary-400 hover:text-primary-300 p-1"
-                    title="Редактировать"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-              <tr v-if="loading">
-                <td colspan="7" class="px-4 py-8 text-center text-gray-400">
-                  Загрузка...
-                </td>
-              </tr>
-              <tr v-if="!loading && clients.length === 0">
-                <td colspan="7" class="px-4 py-8 text-center text-gray-400">
-                  Клиенты не найдены
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Пагинация -->
-        <div class="flex justify-between items-center mt-4">
-          <div class="text-sm text-gray-400">
-            Показано {{ clients.length }} из {{ totalCount }} клиентов
-          </div>
-          <div class="flex gap-2">
+        <DataTable
+          :columns="columns"
+          :items="clients"
+          :loading="isLoading"
+          :paginated="true"
+          :skip="skip"
+          :limit="limit"
+          :total-count="totalCount"
+          empty-text="Клиенты не найдены"
+          row-key="ID"
+          @page-change="loadClients"
+        >
+          <!-- Слот для колонки Клиент -->
+          <template #client-name="{ item }">
+            <div class="text-white font-medium">{{ item.CLIENT_NAME }}</div>
+            <div class="text-sm text-gray-400">{{ item.PRED }}</div>
+          </template>
+          
+          <!-- Слот для колонки Действия -->
+          <template #actions="{ item }">
             <button
-              :disabled="skip === 0"
-              @click="loadClients(skip - limit)"
-              class="px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm transition-colors"
+              class="text-primary-400 hover:text-primary-300 p-1"
+              title="Редактировать"
             >
-              Назад
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
             </button>
-            <button
-              :disabled="clients.length < limit"
-              @click="loadClients(skip + limit)"
-              class="px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-white text-sm transition-colors"
-            >
-              Далее
-            </button>
-          </div>
-        </div>
+          </template>
+        </DataTable>
       </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { clientsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
+import DataTable from '../components/DataTable.vue'
+import FilterFields from '../components/FilterFields.vue'
+
+let isLoading = false
 
 const clients = ref([])
-const loading = ref(false)
-const searchQuery = ref('')
 const skip = ref(0)
 const limit = ref(40)
 const totalCount = ref(0)
 
-const filteredClients = computed(() => {
-  if (!searchQuery.value) return clients.value
-  
-  const query = searchQuery.value.toLowerCase()
-  return clients.value.filter(client =>
-    client.CLIENT_NAME?.toLowerCase().includes(query) ||
-    client.PHONE?.includes(query) ||
-    client.EMAIL?.toLowerCase().includes(query)
-  )
+const filters = ref({
+  CLIENT_NAME: '',
+  ADDRESS: '',
+  PHONE: '',
+  EMAIL: ''
 })
 
-const formatDate = (dateString) => {
-  if (!dateString) return '-'
-  const date = new Date(dateString)
-  return date.toLocaleDateString('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
-}
+const filterFields = [
+  { key: 'CLIENT_NAME', label: 'Название клиента' },
+  { key: 'ADDRESS', label: 'Адрес' },
+  { key: 'PHONE', label: 'Телефон' },
+  { key: 'EMAIL', label: 'Email' }
+]
+
+const columns = [
+  { key: 'ID', label: 'ID', align: 'left', textClass: 'text-sm text-gray-400' },
+  { key: 'client-name', label: 'Клиент', align: 'left' },
+  { key: 'PHONE', label: 'Телефон', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'EMAIL', label: 'Email', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'ADDRESS', label: 'Адрес', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'CR_TIME', label: 'Дата создания', align: 'left', textClass: 'text-sm text-gray-400', format: 'date' },
+  { key: 'actions', label: 'Действия', align: 'right' }
+]
 
 const loadClients = async (newSkip = 0) => {
-  loading.value = true
+  if (isLoading) return
+  isLoading = true
+  
   try {
-    const response = await clientsApi.getAll({
+    const params = {
       skip: newSkip,
-      limit: newSkip + limit.value
+      limit: newSkip + limit.value,
+      ...filters.value
+    }
+    
+    // Убираем пустые фильтры
+    Object.keys(params).forEach(key => {
+      if (!params[key]) delete params[key]
     })
+    
+    const response = await clientsApi.getAll(params)
     clients.value = response.data
     skip.value = newSkip
     // Для простоты предполагаем, что если вернулось меньше ожидаемого, то это последняя страница
@@ -151,9 +122,15 @@ const loadClients = async (newSkip = 0) => {
   } catch (error) {
     console.error('Ошибка при загрузке клиентов:', error)
   } finally {
-    loading.value = false
+    isLoading = false
   }
 }
+
+// При изменении фильтров сбрасываем на первую страницу
+watch(filters, () => {
+  skip.value = 0
+  loadClients(0)
+}, { deep: true })
 
 onMounted(() => {
   loadClients()
