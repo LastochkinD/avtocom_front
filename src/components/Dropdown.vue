@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div ref="dropdownRef" class="relative">
     <button
       type="button"
       @click="toggleDropdown"
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -76,6 +76,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change'])
 
+const dropdownRef = ref(null)
 const isOpen = ref(false)
 
 const selectedOption = computed(() => {
@@ -94,7 +95,7 @@ const selectOption = (option) => {
 
 // Close dropdown when clicking outside
 const handleClickOutside = (event) => {
-  if (!event.target.closest('.relative')) {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isOpen.value = false
   }
 }
