@@ -14,6 +14,10 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  // Предотвращаем кэширование GET запросов
+  if (config.method === 'get') {
+    config.params = { ...config.params, _: Date.now() }
+  }
   return config
 })
 
