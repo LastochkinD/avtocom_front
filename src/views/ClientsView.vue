@@ -46,6 +46,7 @@
           <!-- Слот для колонки Действия -->
           <template #actions="{ item }">
             <button
+              @click="editClient(item)"
               class="text-primary-400 hover:text-primary-300 p-1"
               title="Редактировать"
             >
@@ -57,6 +58,14 @@
         </DataTable>
       </div>
     </main>
+
+    <!-- Модальное окно редактирования -->
+    <ClientEditModal
+      :is-open="isModalOpen"
+      :client="selectedClient"
+      @close="isModalOpen = false"
+      @save="handleSave"
+    />
   </div>
 </template>
 
@@ -66,6 +75,7 @@ import { clientsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import DataTable from '../components/DataTable.vue'
 import FilterFields from '../components/FilterFields.vue'
+import ClientEditModal from '../components/ClientEditModal.vue'
 
 let isLoading = false
 
@@ -73,6 +83,9 @@ const clients = ref([])
 const skip = ref(0)
 const limit = ref(40)
 const totalCount = ref(0)
+
+const isModalOpen = ref(false)
+const selectedClient = ref(null)
 
 const filters = ref({
   CLIENT_NAME: '',
@@ -124,6 +137,18 @@ const loadClients = async (newSkip = 0) => {
     console.error('Ошибка при загрузке клиентов:', error)
   } finally {
     isLoading = false
+  }
+}
+
+const editClient = (client) => {
+  selectedClient.value = client
+  isModalOpen.value = true
+}
+
+const handleSave = (updatedClient) => {
+  const index = clients.value.findIndex(c => c.ID === updatedClient.ID)
+  if (index !== -1) {
+    clients.value[index] = { ...clients.value[index], ...updatedClient }
   }
 }
 

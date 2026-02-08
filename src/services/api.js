@@ -18,6 +18,11 @@ api.interceptors.request.use((config) => {
   if (config.method === 'get') {
     config.params = { ...config.params, _: Date.now() }
   }
+  // Преобразуем данные в JSON body для POST/PUT/PATCH запросов
+  if (config.method === 'post' || config.method === 'put' || config.method === 'patch') {
+    config.headers['Content-Type'] = 'application/json'
+    config.data = JSON.stringify(config.data)
+  }
   return config
 })
 
