@@ -42,6 +42,26 @@
             
             <!-- Поля для физического лица (client_type = 0) -->
             <template v-if="isPhysicalPerson">
+              <!-- Телефон (сразу под ФИО) -->
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Телефон</label>
+                <input
+                  v-model="form.PHONE"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <!-- Email и Дата рождения в одной строке -->
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Email</label>
+                <input
+                  v-model="form.EMAIL"
+                  type="email"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
               <div>
                 <label class="block text-sm text-gray-400 mb-1">Дата рождения</label>
                 <input
@@ -51,31 +71,37 @@
                 />
               </div>
               
-              <div>
-                <label class="block text-sm text-gray-400 mb-1">Серия паспорта</label>
-                <input
-                  v-model="form.P_SER"
-                  type="text"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                />
-              </div>
-              
-              <div>
-                <label class="block text-sm text-gray-400 mb-1">Номер паспорта</label>
-                <input
-                  v-model="form.P_NUM"
-                  type="text"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                />
-              </div>
-              
-              <div class="col-span-2">
-                <label class="block text-sm text-gray-400 mb-1">Кем выдан</label>
-                <input
-                  v-model="form.P_GIVEN"
-                  type="text"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                />
+              <!-- Паспортные данные (внизу) -->
+              <div class="col-span-2 p-4 bg-gray-750 border border-gray-600 rounded-lg">
+                <h3 class="text-sm font-medium text-gray-300 mb-3">Паспортные данные</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-1">Серия паспорта</label>
+                    <input
+                      v-model="form.P_SER"
+                      type="text"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-1">Номер паспорта</label>
+                    <input
+                      v-model="form.P_NUM"
+                      type="text"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+                  
+                  <div class="col-span-2">
+                    <label class="block text-sm text-gray-400 mb-1">Кем выдан</label>
+                    <input
+                      v-model="form.P_GIVEN"
+                      type="text"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+                </div>
               </div>
               
               <div class="col-span-2">
@@ -109,6 +135,24 @@
             <!-- Поля для юридического лица (client_type = 1) -->
             <template v-else>
               <div>
+                <label class="block text-sm text-gray-400 mb-1">Телефон</label>
+                <input
+                  v-model="form.PHONE"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Email</label>
+                <input
+                  v-model="form.EMAIL"
+                  type="email"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
                 <label class="block text-sm text-gray-400 mb-1">ИНН</label>
                 <input
                   v-model="form.INN"
@@ -137,24 +181,6 @@
             </template>
             
             <!-- Общие поля -->
-            <div>
-              <label class="block text-sm text-gray-400 mb-1">Телефон</label>
-              <input
-                v-model="form.PHONE"
-                type="text"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
-            </div>
-            
-            <div>
-              <label class="block text-sm text-gray-400 mb-1">Email</label>
-              <input
-                v-model="form.EMAIL"
-                type="email"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
-            </div>
-            
             <div class="col-span-2">
               <label class="block text-sm text-gray-400 mb-1">Адрес</label>
               <input
@@ -211,7 +237,7 @@ const saving = ref(false)
 const error = ref('')
 
 const isPhysicalPerson = computed(() => {
-  return props.client?.client_type === 0
+  return props.client?.CL_TYPE === 0
 })
 
 const form = ref({
