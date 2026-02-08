@@ -27,8 +27,11 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="col-span-2">
-              <label class="block text-sm text-gray-400 mb-1">Название клиента *</label>
+            <!-- ФиО / Наименование (общее поле) -->
+            <div :class="isPhysicalPerson ? 'col-span-2' : 'col-span-2'">
+              <label class="block text-sm text-gray-400 mb-1">
+                {{ isPhysicalPerson ? 'ФИО *' : 'Наименование *' }}
+              </label>
               <input
                 v-model="form.CLIENT_NAME"
                 type="text"
@@ -37,24 +40,103 @@
               />
             </div>
             
-            <div>
-              <label class="block text-sm text-gray-400 mb-1">ИНН</label>
-              <input
-                v-model="form.INN"
-                type="text"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
-            </div>
+            <!-- Поля для физического лица (client_type = 0) -->
+            <template v-if="isPhysicalPerson">
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Дата рождения</label>
+                <input
+                  v-model="form.BIRTH_DATE"
+                  type="date"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Серия паспорта</label>
+                <input
+                  v-model="form.P_SER"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Номер паспорта</label>
+                <input
+                  v-model="form.P_NUM"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div class="col-span-2">
+                <label class="block text-sm text-gray-400 mb-1">Кем выдан</label>
+                <input
+                  v-model="form.P_GIVEN"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div class="col-span-2">
+                <label class="block text-sm text-gray-400 mb-1">Доверенные лица</label>
+                <textarea
+                  v-model="form.DOV"
+                  rows="2"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                ></textarea>
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Тип дисконтной карты</label>
+                <input
+                  v-model="form.CARD_TYPE_ID"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">Номер дисконтной карты</label>
+                <input
+                  v-model="form.CARD_NUMBER"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+            </template>
             
-            <div>
-              <label class="block text-sm text-gray-400 mb-1">КПП</label>
-              <input
-                v-model="form.KPP"
-                type="text"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
-            </div>
+            <!-- Поля для юридического лица (client_type = 1) -->
+            <template v-else>
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">ИНН</label>
+                <input
+                  v-model="form.INN"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div>
+                <label class="block text-sm text-gray-400 mb-1">КПП</label>
+                <input
+                  v-model="form.KPP"
+                  type="text"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                />
+              </div>
+              
+              <div class="col-span-2">
+                <label class="block text-sm text-gray-400 mb-1">Доверенные лица</label>
+                <textarea
+                  v-model="form.DOV"
+                  rows="2"
+                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                ></textarea>
+              </div>
+            </template>
             
+            <!-- Общие поля -->
             <div>
               <label class="block text-sm text-gray-400 mb-1">Телефон</label>
               <input
@@ -83,12 +165,12 @@
             </div>
             
             <div class="col-span-2">
-              <label class="block text-sm text-gray-400 mb-1">Примечание</label>
-              <textarea
-                v-model="form.COMMENTS"
-                rows="3"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-              ></textarea>
+              <label class="block text-sm text-gray-400 mb-1">Адрес для рассылки</label>
+              <input
+                v-model="form.DELIVERY_ADDR"
+                type="text"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+              />
             </div>
           </div>
         </form>
@@ -115,7 +197,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { clientsApi } from '../services/api'
 
 const props = defineProps({
@@ -128,20 +210,35 @@ const emit = defineEmits(['close', 'save'])
 const saving = ref(false)
 const error = ref('')
 
+const isPhysicalPerson = computed(() => {
+  return props.client?.client_type === 0
+})
+
 const form = ref({
   ID: null,
   CLIENT_NAME: '',
+  CLIENT_TYPE: 0,
+  BIRTH_DATE: '',
+  P_SER: '',
+  P_NUM: '',
+  P_GIVEN: '',
+  DOV: '',
+  CARD_TYPE_ID: '',
+  CARD_NUMBER: '',
   INN: '',
   KPP: '',
   PHONE: '',
   EMAIL: '',
   ADDRESS: '',
-  COMMENTS: ''
+  DELIVERY_ADDR: ''
 })
+
+const originalData = ref({})
 
 watch(() => props.client, (newClient) => {
   if (newClient) {
     form.value = { ...newClient }
+    originalData.value = { ...newClient }
   }
 }, { immediate: true })
 
@@ -151,12 +248,24 @@ watch(() => props.isOpen, (isOpen) => {
   }
 })
 
+const getChangedFields = () => {
+  const changed = {}
+  for (const key in form.value) {
+    if (form.value[key] !== originalData.value[key]) {
+      changed[key] = form.value[key]
+    }
+  }
+  return changed
+}
+
 const save = async () => {
   error.value = ''
   saving.value = true
   
   try {
-    await clientsApi.update(form.value.ID, form.value)
+    const changedFields = getChangedFields()
+    changedFields.ID = form.value.ID
+    await clientsApi.update(form.value.ID, changedFields)
     emit('save', form.value)
     emit('close')
   } catch (err) {
