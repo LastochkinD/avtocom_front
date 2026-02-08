@@ -27,8 +27,8 @@
           </div>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- ФиО / Наименование (общее поле) -->
-            <div :class="isPhysicalPerson ? 'col-span-2' : 'col-span-2'">
+            <!-- Фио / Наименование (общее поле) -->
+            <div class="col-span-2">
               <label class="block text-sm text-gray-400 mb-1">
                 {{ isPhysicalPerson ? 'ФИО *' : 'Наименование *' }}
               </label>
@@ -71,35 +71,53 @@
                 />
               </div>
               
-              <!-- Паспортные данные (внизу) -->
-              <div class="col-span-2 p-4 bg-gray-750 border border-gray-600 rounded-lg">
-                <h3 class="text-sm font-medium text-gray-300 mb-3">Паспортные данные</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Серия паспорта</label>
-                    <input
-                      v-model="form.P_SER"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Номер паспорта</label>
-                    <input
-                      v-model="form.P_NUM"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Кем выдан</label>
-                    <input
-                      v-model="form.P_GIVEN"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
+              <!-- Паспортные данные (сворачиваемый блок) -->
+              <div class="col-span-2 border border-gray-600 rounded-lg overflow-hidden">
+                <button
+                  type="button"
+                  @click="showPassportData = !showPassportData"
+                  class="w-full flex items-center justify-between p-4 bg-gray-750 hover:bg-gray-700 transition-colors"
+                >
+                  <h3 class="text-sm font-medium text-gray-300">Паспортные данные</h3>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-400 transition-transform"
+                    :class="{ 'rotate-180': showPassportData }"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div v-show="showPassportData" class="p-4 bg-gray-800">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Серия паспорта</label>
+                      <input
+                        v-model="form.P_SER"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Номер паспорта</label>
+                      <input
+                        v-model="form.P_NUM"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                    
+                    <div class="col-span-2">
+                      <label class="block text-sm text-gray-400 mb-1">Кем выдан</label>
+                      <input
+                        v-model="form.P_GIVEN"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -181,6 +199,17 @@
               </div>
             </template>
             
+            <!-- Тип клиента -->
+            <div class="col-span-2">
+              <label class="block text-sm text-gray-400 mb-1">Тип клиента</label>
+              <Dropdown
+                v-model="form.CL_TYPE"
+                :options="clientTypeOptions"
+                placeholder="Выберите тип"
+                empty-text="Нет доступных типов"
+              />
+            </div>
+            
             <!-- Общие поля -->
             <div class="col-span-2">
               <label class="block text-sm text-gray-400 mb-1">Адрес</label>
@@ -239,6 +268,12 @@ const saving = ref(false)
 const error = ref('')
 const discountCards = ref([])
 const loadingDiscountCards = ref(false)
+const showPassportData = ref(false)
+
+const clientTypeOptions = [
+  { value: 0, label: 'Физическое лицо' },
+  { value: 1, label: 'Юридическое лицо' }
+]
 
 const isPhysicalPerson = computed(() => {
   return props.client?.CL_TYPE === 0
@@ -247,6 +282,7 @@ const isPhysicalPerson = computed(() => {
 const form = ref({
   ID: null,
   CLIENT_NAME: '',
+  CL_TYPE: 0,
   CLIENT_TYPE: 0,
   BIRTH_DATE: '',
   P_SER: '',
@@ -275,6 +311,7 @@ watch(() => props.client, (newClient) => {
 watch(() => props.isOpen, (isOpen) => {
   if (isOpen) {
     error.value = ''
+    showPassportData.value = false
   }
 })
 
