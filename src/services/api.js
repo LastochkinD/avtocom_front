@@ -53,3 +53,21 @@ export const discountCardsApi = {
     return api.get('/discount_cards/', { params })
   }
 }
+
+export const carsApi = {
+  getAll(params = {}) {
+    return api.get('/cars/', { params })
+  },
+  getById(id) {
+    return api.get(`/cars/${id}`)
+  },
+  create(data) {
+    return api.post('/cars/', data)
+  },
+  update(id, data) {
+    return api.put(`/cars/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/cars/${id}`)
+  }
+}

@@ -3,6 +3,7 @@ import { useAuthStore } from '../stores/auth'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import ClientsView from '../views/ClientsView.vue'
+import CarsView from '../views/CarsView.vue'
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
     path: '/spravochnik/clients',
     name: 'clients',
     component: ClientsView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/spravochnik/cars',
+    name: 'cars',
+    component: CarsView,
     meta: { requiresAuth: true }
   },
   {
