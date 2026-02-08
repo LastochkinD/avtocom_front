@@ -205,12 +205,16 @@
         </li>
       </ul>
     </nav>
+
+    <!-- Информация о пользователе -->
+    <UserInfo />
   </aside>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import UserInfo from './UserInfo.vue'
 
 const authStore = useAuthStore()
 

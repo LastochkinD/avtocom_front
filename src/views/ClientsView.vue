@@ -105,13 +105,14 @@ const loadClients = async (newSkip = 0) => {
   try {
     const params = {
       skip: newSkip,
-      limit: newSkip + limit.value,
-      ...filters.value
+      limit: newSkip + limit.value
     }
     
-    // Убираем пустые фильтры
-    Object.keys(params).forEach(key => {
-      if (!params[key]) delete params[key]
+    // Добавляем фильтры с lowercase ключами
+    Object.entries(filters.value).forEach(([key, value]) => {
+      if (value) {
+        params[key.toLowerCase()] = value
+      }
     })
     
     const response = await clientsApi.getAll(params)
