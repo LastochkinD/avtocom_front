@@ -123,9 +123,9 @@
               </div>
               
               <div class="col-span-2">
-                <label class="block text-sm text-gray-400 mb-1">Доверенные лица</label>
+                <label class="block text-sm text-gray-400 mb-1">Доверенное лицо</label>
                 <textarea
-                  v-model="form.DOV"
+                  v-model="form.PRED"
                   rows="2"
                   class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
                 ></textarea>
@@ -189,13 +189,64 @@
                 />
               </div>
               
-              <div class="col-span-2">
-                <label class="block text-sm text-gray-400 mb-1">Доверенные лица</label>
-                <textarea
-                  v-model="form.DOV"
-                  rows="2"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-                ></textarea>
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Доверенные лица</label>
+                      <input
+                        v-model="form.PRED"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+              
+              <!-- Доверенность (сворачиваемый блок) -->
+              <div class="col-span-2 border border-gray-600 rounded-lg overflow-hidden">
+                <button
+                  type="button"
+                  @click="showDov = !showDov"
+                  class="w-full flex items-center justify-between p-4 bg-gray-750 hover:bg-gray-700 transition-colors"
+                >
+                  <h3 class="text-sm font-medium text-gray-300">Доверенность</h3>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-400 transition-transform"
+                    :class="{ 'rotate-180': showDov }"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div v-show="showDov" class="p-4 bg-gray-800">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Номер</label>
+                      <input
+                        v-model="form.DOV"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Выдана</label>
+                      <input
+                        v-model="form.DOV_AGENT"
+                        type="text"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-1">Срок действия</label>
+                      <input
+                        v-model="form.DOV_DATE"
+                        type="date"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </template>
             
@@ -269,6 +320,7 @@ const error = ref('')
 const discountCards = ref([])
 const loadingDiscountCards = ref(false)
 const showPassportData = ref(false)
+const showDov = ref(false)
 
 const clientTypeOptions = [
   { value: 0, label: 'Физическое лицо' },
@@ -288,7 +340,10 @@ const form = ref({
   P_SER: '',
   P_NUM: '',
   P_GIVEN: '',
+  PRED: '',
   DOV: '',
+  DOV_AGENT: '',
+  DOV_DATE: '',
   CARD_TYPE_ID: '',
   CARD_NUMBER: '',
   INN: '',
@@ -312,6 +367,7 @@ watch(() => props.isOpen, (isOpen) => {
   if (isOpen) {
     error.value = ''
     showPassportData.value = false
+    showDov.value = false
   }
 })
 
