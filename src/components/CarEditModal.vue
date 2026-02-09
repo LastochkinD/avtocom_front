@@ -134,7 +134,55 @@
             <!-- Клиент -->
             <div class="bg-gray-700/50 rounded-lg p-4">
               <h3 class="text-white font-medium mb-4">Клиент</h3>
-              <p class="text-gray-500 text-sm">Раздел пока пустой</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Имя</label>
+                  <input
+                    :value="client?.CLIENT_NAME || ''"
+                    type="text"
+                    readonly
+                    class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Телефон</label>
+                  <input
+                    :value="client?.PHONE || ''"
+                    type="text"
+                    readonly
+                    class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white focus:outline-none"
+                  />
+                </div>
+              </div>
+              
+              <!-- Заказчик по умолчанию -->
+              <h4 class="text-white font-medium mb-4 mt-6 border-t border-gray-600 pt-4">Заказчик по умолчанию</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">ФИО</label>
+                  <input
+                    v-model="form.DOV_FIO"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Адрес</label>
+                  <input
+                    v-model="form.DOV_ADDRESS"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Телефон</label>
+                  <input
+                    v-model="form.DOV_PHONE"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+              </div>
             </div>
             
             <!-- Дополнительная информация (сворачиваемая) -->
@@ -227,36 +275,6 @@
                     <input
                       v-model="form.CR_TIME"
                       type="date"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Доверенное лицо ФИО -->
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Доверенное лицо ФИО</label>
-                    <input
-                      v-model="form.DOV_FIO"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Доверенное лицо адрес -->
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Доверенное лицо адрес</label>
-                    <input
-                      v-model="form.DOV_ADDRESS"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Доверенное лицо телефон -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Доверенное лицо телефон</label>
-                    <input
-                      v-model="form.DOV_PHONE"
-                      type="text"
                       class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                     />
                   </div>
@@ -359,7 +377,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { carsApi, marksApi, modelsApi } from '../services/api'
+import { carsApi, marksApi, modelsApi, clientsApi } from '../services/api'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -384,6 +402,7 @@ const error = ref('')
 const marks = ref([])
 const models = ref([])
 const showAdditionalInfo = ref(false)
+const client = ref(null)
 
 const loadMarks = async () => {
   try {
@@ -405,6 +424,20 @@ const loadModels = async (markId) => {
     models.value = response.data
   } catch (err) {
     console.error('Ошибка при загрузке моделей:', err)
+  }
+}
+
+const loadClient = async (clientId) => {
+  if (!clientId) {
+    client.value = null
+    return
+  }
+  try {
+    const response = await clientsApi.getById(clientId)
+    client.value = response.data
+  } catch (err) {
+    console.error('Ошибка при загрузке клиента:', err)
+    client.value = null
   }
 }
 
@@ -456,17 +489,28 @@ watch(() => props.car, async (newCar) => {
     if (newCar.MARK_ID) {
       await loadModels(newCar.MARK_ID)
     }
+    if (newCar.CLIENT_ID) {
+      await loadClient(newCar.CLIENT_ID)
+    } else {
+      client.value = null
+    }
   }
 }, { immediate: true })
 
 watch(() => props.isOpen, (isOpen) => {
   if (isOpen) {
     error.value = ''
+    client.value = null
   }
 })
 
-watch(() => form.value.MARK_ID, (newMarkId) => {
-  loadModels(newMarkId)
+watch(() => form.value.MARK_ID, async (newMarkId) => {
+  if (newMarkId) {
+    await loadModels(newMarkId)
+  } else {
+    models.value = []
+    form.value.MODEL_ID = null
+  }
 })
 
 const getChangedFields = () => {
