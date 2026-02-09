@@ -28,7 +28,7 @@
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- VIN -->
-            <div class="col-span-2">
+            <div>
               <label class="block text-sm text-gray-400 mb-1">VIN *</label>
               <input
                 v-model="form.VIN"
@@ -58,14 +58,18 @@
               />
             </div>
             
-            <!-- Марка ID -->
+            <!-- Марка -->
             <div>
-              <label class="block text-sm text-gray-400 mb-1">ID Марки</label>
-              <input
-                v-model.number="form.MARK_ID"
-                type="number"
+              <label class="block text-sm text-gray-400 mb-1">Марка</label>
+              <select
+                v-model="form.MARK_ID"
                 class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
+              >
+                <option :value="null">Выберите марку</option>
+                <option v-for="mark in marks" :key="mark.ID" :value="mark.ID">
+                  {{ mark.MARK_NAME }}
+                </option>
+              </select>
             </div>
             
             <!-- Модель ID -->
@@ -262,8 +266,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { carsApi } from '../services/api'
+import { ref, watch, onMounted } from 'vue'
+import { carsApi, marksApi } from '../services/api'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -274,6 +278,20 @@ const emit = defineEmits(['close', 'save'])
 
 const saving = ref(false)
 const error = ref('')
+const marks = ref([])
+
+const loadMarks = async () => {
+  try {
+    const response = await marksApi.getAll()
+    marks.value = response.data
+  } catch (err) {
+    console.error('Ошибка при загрузке марок:', err)
+  }
+}
+
+onMounted(() => {
+  loadMarks()
+})
 
 const defaultForm = {
   ID: null,

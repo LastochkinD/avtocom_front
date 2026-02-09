@@ -89,3 +89,9 @@ export const nomenclatureApi = {
     return api.delete(`/parts_nom/${id}`)
   }
 }
+
+export const marksApi = {
+  getAll(params = {}) {
+    return api.get('/marks/', { params })
+  }
+}
