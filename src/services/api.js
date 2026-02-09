@@ -95,3 +95,9 @@ export const marksApi = {
     return api.get('/marks/', { params })
   }
 }
+
+export const modelsApi = {
+  getAll(params = {}) {
+    return api.get('/models/', { params })
+  }
+}

@@ -72,14 +72,19 @@
               </select>
             </div>
             
-            <!-- Модель ID -->
+            <!-- Модель -->
             <div>
-              <label class="block text-sm text-gray-400 mb-1">ID Модели</label>
-              <input
-                v-model.number="form.MODEL_ID"
-                type="number"
+              <label class="block text-sm text-gray-400 mb-1">Модель</label>
+              <select
+                v-model="form.MODEL_ID"
                 class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-              />
+                :disabled="!form.MARK_ID"
+              >
+                <option :value="null">Сначала выберите марку</option>
+                <option v-for="model in models" :key="model.ID" :value="model.ID">
+                  {{ model.MODEL_NAME }}
+                </option>
+              </select>
             </div>
             
             <!-- Цвет ID -->
@@ -267,7 +272,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { carsApi, marksApi } from '../services/api'
+import { carsApi, marksApi, modelsApi } from '../services/api'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -279,6 +284,7 @@ const emit = defineEmits(['close', 'save'])
 const saving = ref(false)
 const error = ref('')
 const marks = ref([])
+const models = ref([])
 
 const loadMarks = async () => {
   try {
@@ -286,6 +292,20 @@ const loadMarks = async () => {
     marks.value = response.data
   } catch (err) {
     console.error('Ошибка при загрузке марок:', err)
+  }
+}
+
+const loadModels = async (markId) => {
+  if (!markId) {
+    models.value = []
+    form.value.MODEL_ID = null
+    return
+  }
+  try {
+    const response = await modelsApi.getAll({ MARK_ID: markId })
+    models.value = response.data
+  } catch (err) {
+    console.error('Ошибка при загрузке моделей:', err)
   }
 }
 
@@ -330,10 +350,14 @@ const defaultForm = {
 const form = ref({ ...defaultForm })
 const originalData = ref({})
 
-watch(() => props.car, (newCar) => {
+watch(() => props.car, async (newCar) => {
   if (newCar) {
     form.value = { ...defaultForm, ...newCar }
     originalData.value = { ...newCar }
+    // Load models for the car's mark if it exists
+    if (newCar.MARK_ID) {
+      await loadModels(newCar.MARK_ID)
+    }
   }
 }, { immediate: true })
 
@@ -341,6 +365,10 @@ watch(() => props.isOpen, (isOpen) => {
   if (isOpen) {
     error.value = ''
   }
+})
+
+watch(() => form.value.MARK_ID, (newMarkId) => {
+  loadModels(newMarkId)
 })
 
 const getChangedFields = () => {
