@@ -91,10 +91,13 @@ const columns = [
   { key: 'ID', label: 'ID', align: 'left', textClass: 'text-sm text-gray-400', width: '60px' },
   { key: 'vin', label: 'VIN', align: 'left' },
   { key: 'number', label: 'Номер', align: 'left' },
+  { key: 'MODEL_NAME', label: 'Модель', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'COLOR_NAME', label: 'Цвет', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'CR_YEAR', label: 'Год выпуска', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'ENGINE_TYPE', label: 'Тип двигателя', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'KPP_TYPE', label: 'КПП', align: 'left', textClass: 'text-sm text-gray-300' },
-  { key: 'PTS_NUM', label: 'ПТС', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'CLIENT_NAME', label: 'Клиент', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'PHONE', label: 'Телефон', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'actions', label: 'Действия', align: 'right', width: '80px' }
 ]
 
