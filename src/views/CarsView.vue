@@ -67,6 +67,15 @@
       :car="selectedCar"
       @close="isModalOpen = false"
       @save="handleSave"
+      @edit-client="editClient"
+    />
+    
+    <!-- Модальное окно редактирования клиента -->
+    <ClientEditModal
+      :is-open="isClientModalOpen"
+      :client="selectedClient"
+      @close="isClientModalOpen = false"
+      @save="handleClientSave"
     />
   </div>
 </template>
@@ -77,6 +86,7 @@ import { carsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import DataTable from '../components/DataTable.vue'
 import CarEditModal from '../components/CarEditModal.vue'
+import ClientEditModal from '../components/ClientEditModal.vue'
 
 const isLoading = ref(false)
 const cars = ref([])
@@ -86,6 +96,8 @@ const totalCount = ref(0)
 
 const isModalOpen = ref(false)
 const selectedCar = ref(null)
+const isClientModalOpen = ref(false)
+const selectedClient = ref(null)
 
 const columns = [
   { key: 'ID', label: 'ID', align: 'left', textClass: 'text-sm text-gray-400', width: '60px' },
@@ -129,6 +141,17 @@ const handleSave = (updatedCar) => {
   const index = cars.value.findIndex(c => c.ID === updatedCar.ID)
   if (index !== -1) {
     cars.value[index] = { ...cars.value[index], ...updatedCar }
+  }
+}
+
+const editClient = (client) => {
+  selectedClient.value = client
+  isClientModalOpen.value = true
+}
+
+const handleClientSave = (updatedClient) => {
+  if (selectedCar.value) {
+    loadCars(skip.value)
   }
 }
 

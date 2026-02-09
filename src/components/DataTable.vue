@@ -38,13 +38,14 @@
                 column.align === 'right' ? 'text-right' : column.align === 'center' ? 'text-center' : 'text-left'
               ]"
             >
-              <!-- Слот для кастомного рендеринга -->
-              <slot
-                v-if="$slots[column.key]"
-                :name="column.key"
-                :item="item"
-                :value="item[column.key]"
-              />
+            <!-- Слот для кастомного рендеринга -->
+              <template v-if="$slots[column.key]">
+                <slot
+                  :name="column.key"
+                  :item="item"
+                  :value="item[column.key]"
+                />
+              </template>
               <template v-else>
                 <span :class="column.textClass">
                   {{ formatValue(item[column.key], column.format) }}
