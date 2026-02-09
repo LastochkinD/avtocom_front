@@ -135,16 +135,28 @@
             <div class="bg-gray-700/50 rounded-lg p-4">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-white font-medium">Клиент</h3>
-                <button
-                  v-if="client"
-                  @click="$emit('edit-client', client)"
-                  class="p-1 text-gray-400 hover:text-primary-400 transition-colors"
-                  title="Редактировать клиента"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-                </button>
+                <div class="flex items-center gap-2">
+                  <button
+                    v-if="client"
+                    @click="openClientSearch"
+                    class="p-1 text-gray-400 hover:text-primary-400 transition-colors"
+                    title="Сменить клиента"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                  </button>
+                  <button
+                    v-if="client"
+                    @click="$emit('edit-client', client)"
+                    class="p-1 text-gray-400 hover:text-primary-400 transition-colors"
+                    title="Редактировать клиента"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
@@ -366,18 +378,25 @@
       </div>
     </div>
   </Teleport>
+
+  <ClientSearchModal
+    :is-open="clientSearchOpen"
+    @close="clientSearchOpen = false"
+    @select="handleClientSelect"
+  />
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { carsApi, marksApi, modelsApi, clientsApi } from '../services/api'
+import ClientSearchModal from './ClientSearchModal.vue'
 
 const props = defineProps({
   isOpen: Boolean,
   car: Object
 })
 
-const emit = defineEmits(['close', 'save', 'edit-client'])
+const emit = defineEmits(['close', 'save', 'edit-client', 'change-client'])
 
 const tabs = [
   { id: 'car', name: 'Автомобиль' },
@@ -396,6 +415,7 @@ const error = ref('')
 const marks = ref([])
 const models = ref([])
 const client = ref(null)
+const clientSearchOpen = ref(false)
 
 const loadMarks = async () => {
   try {
@@ -532,5 +552,16 @@ const save = async () => {
   } finally {
     saving.value = false
   }
+}
+
+const openClientSearch = () => {
+  clientSearchOpen.value = true
+}
+
+const handleClientSelect = async (newClient) => {
+  form.value.CLIENT_ID = newClient.ID
+  client.value = newClient
+  emit('change-client', newClient)
+  clientSearchOpen.value = false
 }
 </script>
