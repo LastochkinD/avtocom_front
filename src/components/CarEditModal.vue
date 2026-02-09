@@ -184,140 +184,121 @@
                 </div>
               </div>
             </div>
-            
-            <!-- Дополнительная информация (сворачиваемая) -->
-            <div class="bg-gray-700/50 rounded-lg overflow-hidden">
-              <!-- Заголовок с кнопкой сворачивания/разворачивания -->
-              <button
-                type="button"
-                @click="showAdditionalInfo = !showAdditionalInfo"
-                class="w-full flex items-center justify-between p-4 hover:bg-gray-700/50 transition-colors"
-              >
-                <h3 class="text-white font-medium">Дополнительная информация</h3>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-gray-400 transition-transform duration-200"
-                  :class="{ 'rotate-180': showAdditionalInfo }"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              <!-- Сворачиваемое содержимое -->
-              <div v-show="showAdditionalInfo" class="px-4 pb-4">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <!-- Номер двигателя -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Номер двигателя</label>
-                    <input
-                      v-model="form.ENGINE_NUM"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Номер кузова -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Номер кузова</label>
-                    <input
-                      v-model="form.BODY_NUM"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Тип КПП -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Тип КПП</label>
-                    <input
-                      v-model="form.KPP_TYPE"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- ПТС серия -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">ПТС серия</label>
-                    <input
-                      v-model="form.PTS_SER"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- ПТС номер -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">ПТС номер</label>
-                    <input
-                      v-model="form.PTS_NUM"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Дата продажи -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Дата продажи</label>
-                    <input
-                      v-model="form.SELL_DATE"
-                      type="date"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Дата выпуска -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Дата выпуска</label>
-                    <input
-                      v-model="form.CR_TIME"
-                      type="date"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Контакт -->
-                  <div>
-                    <label class="block text-sm text-gray-400 mb-1">Контакт</label>
-                    <input
-                      v-model="form.CONTACT"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Оформляющий наименование -->
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Оформляющий</label>
-                    <input
-                      v-model="form.OFORMLEN_NA"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Адрес ТО -->
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Адрес ТО</label>
-                    <input
-                      v-model="form.ADDRESS_TP"
-                      type="text"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                    />
-                  </div>
-                  
-                  <!-- Примечание -->
-                  <div class="col-span-2">
-                    <label class="block text-sm text-gray-400 mb-1">Примечание</label>
-                    <textarea
-                      v-model="form.NOTE"
-                      rows="3"
-                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-                    ></textarea>
-                  </div>
+          </div>
+          
+          <!-- Дополнительная информация Tab -->
+          <div v-show="activeTab === 'additional'" class="p-4">
+            <div class="bg-gray-700/50 rounded-lg p-4">
+              <h3 class="text-white font-medium mb-4">Дополнительная информация</h3>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Номер двигателя -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Номер двигателя</label>
+                  <input
+                    v-model="form.ENGINE_NUM"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Номер кузова -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Номер кузова</label>
+                  <input
+                    v-model="form.BODY_NUM"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white font-mono focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Тип КПП -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Тип КПП</label>
+                  <input
+                    v-model="form.KPP_TYPE"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- ПТС серия -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">ПТС серия</label>
+                  <input
+                    v-model="form.PTS_SER"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- ПТС номер -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">ПТС номер</label>
+                  <input
+                    v-model="form.PTS_NUM"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Дата продажи -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Дата продажи</label>
+                  <input
+                    v-model="form.SELL_DATE"
+                    type="date"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Дата выпуска -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Дата выпуска</label>
+                  <input
+                    v-model="form.CR_TIME"
+                    type="date"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Контакт -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Контакт</label>
+                  <input
+                    v-model="form.CONTACT"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Оформляющий наименование -->
+                <div class="col-span-2">
+                  <label class="block text-sm text-gray-400 mb-1">Оформляющий</label>
+                  <input
+                    v-model="form.OFORMLEN_NA"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Адрес ТО -->
+                <div class="col-span-2">
+                  <label class="block text-sm text-gray-400 mb-1">Адрес ТО</label>
+                  <input
+                    v-model="form.ADDRESS_TP"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                
+                <!-- Примечание -->
+                <div class="col-span-2">
+                  <label class="block text-sm text-gray-400 mb-1">Примечание</label>
+                  <textarea
+                    v-model="form.NOTE"
+                    rows="3"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -388,6 +369,7 @@ const emit = defineEmits(['close', 'save'])
 
 const tabs = [
   { id: 'car', name: 'Автомобиль' },
+  { id: 'additional', name: 'Дополнительная информация' },
   { id: 'workorders', name: 'Заказ-наряды' },
   { id: 'history', name: 'История' },
   { id: 'orders', name: 'Заказы' },
@@ -401,7 +383,6 @@ const saving = ref(false)
 const error = ref('')
 const marks = ref([])
 const models = ref([])
-const showAdditionalInfo = ref(false)
 const client = ref(null)
 
 const loadMarks = async () => {
