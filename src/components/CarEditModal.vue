@@ -211,6 +211,26 @@
                   />
                 </div>
               </div>
+              
+              <!-- Оформлен на и Адрес по тех паспорту -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 border-t border-gray-600 pt-4">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Оформлен на (OFORMLEN_NA)</label>
+                  <input
+                    v-model="form.OFORMLEN_NA"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Адрес по тех паспорту (ADDRESS_TP)</label>
+                  <input
+                    v-model="form.ADDRESS_TP"
+                    type="text"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           
