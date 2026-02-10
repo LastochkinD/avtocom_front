@@ -101,3 +101,9 @@ export const modelsApi = {
     return api.get('/models/', { params })
   }
 }
+
+export const colorsApi = {
+  getAll(params = {}) {
+    return api.get('/colors/', { params })
+  }
+}

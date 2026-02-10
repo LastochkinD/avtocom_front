@@ -143,6 +143,8 @@ const handleSave = (updatedCar) => {
   if (index !== -1) {
     cars.value[index] = { ...cars.value[index], ...updatedCar }
   }
+  // Перезагружаем список автомобилей для обновления всех полей включая COLOR_NAME
+  loadCars(skip.value)
 }
 
 const editClient = (client) => {

@@ -92,11 +92,15 @@
                 <!-- Цвет -->
                 <div>
                   <label class="block text-sm text-gray-400 mb-1">Цвет</label>
-                  <input
-                    v-model.number="form.COLOR_ID"
-                    type="number"
+                  <select
+                    v-model="form.COLOR_ID"
                     class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                  />
+                  >
+                    <option :value="null">Выберите цвет</option>
+                    <option v-for="color in colors" :key="color.ID" :value="color.ID">
+                      {{ color.COLOR_NAME }}
+                    </option>
+                  </select>
                 </div>
                 
                 <!-- Год выпуска -->
@@ -388,7 +392,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { carsApi, marksApi, modelsApi, clientsApi } from '../services/api'
+import { carsApi, marksApi, modelsApi, colorsApi, clientsApi } from '../services/api'
 import ClientSearchModal from './ClientSearchModal.vue'
 
 const props = defineProps({
@@ -414,6 +418,7 @@ const saving = ref(false)
 const error = ref('')
 const marks = ref([])
 const models = ref([])
+const colors = ref([])
 const client = ref(null)
 const clientSearchOpen = ref(false)
 
@@ -454,8 +459,18 @@ const loadClient = async (clientId) => {
   }
 }
 
+const loadColors = async () => {
+  try {
+    const response = await colorsApi.getAll()
+    colors.value = response.data
+  } catch (err) {
+    console.error('Ошибка при загрузке цветов:', err)
+  }
+}
+
 onMounted(() => {
   loadMarks()
+  loadColors()
 })
 
 const defaultForm = {
