@@ -26,6 +26,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
+              ref="searchInput"
               v-model="searchQuery"
               type="text"
               placeholder="Поиск по имени, телефону или номеру..."
@@ -92,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { clientsApi } from '../services/api'
 
 const props = defineProps({
@@ -104,6 +105,7 @@ const emit = defineEmits(['close', 'select'])
 const searchQuery = ref('')
 const clients = ref([])
 const loading = ref(false)
+const searchInput = ref(null)
 let searchTimeout = null
 
 const search = async () => {
@@ -141,10 +143,12 @@ const selectClient = (client) => {
   clients.value = []
 }
 
-watch(() => props.isOpen, (isOpen) => {
+watch(() => props.isOpen, async (isOpen) => {
   if (isOpen) {
     searchQuery.value = ''
     clients.value = []
+    await nextTick()
+    searchInput.value?.focus()
   }
 })
 </script>
