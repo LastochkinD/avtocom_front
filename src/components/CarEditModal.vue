@@ -132,6 +132,16 @@
                     class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                   />
                 </div>
+                
+                <!-- Примечание -->
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Примечание</label>
+                  <textarea
+                    v-model="form.NOTE"
+                    rows="1"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                  ></textarea>
+                </div>
               </div>
             </div>
             
@@ -162,7 +172,7 @@
                   </button>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
                   <label class="block text-sm text-gray-400 mb-1">Имя</label>
                   <input
@@ -180,6 +190,15 @@
                     readonly
                     class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white focus:outline-none"
                   />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Примечание</label>
+                  <textarea
+                    :value="client?.NOTE || ''"
+                    rows="1"
+                    readonly
+                    class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white focus:outline-none resize-none"
+                  ></textarea>
                 </div>
               </div>
               
@@ -215,7 +234,7 @@
               <!-- Оформлен на и Адрес по тех паспорту -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 border-t border-gray-600 pt-4">
                 <div>
-                  <label class="block text-sm text-gray-400 mb-1">Оформлен на (OFORMLEN_NA)</label>
+                  <label class="block text-sm text-gray-400 mb-1">Оформлен на</label>
                   <input
                     v-model="form.OFORMLEN_NA"
                     type="text"
@@ -223,7 +242,7 @@
                   />
                 </div>
                 <div>
-                  <label class="block text-sm text-gray-400 mb-1">Адрес по тех паспорту (ADDRESS_TP)</label>
+                  <label class="block text-sm text-gray-400 mb-1">Адрес по тех паспорту</label>
                   <input
                     v-model="form.ADDRESS_TP"
                     type="text"

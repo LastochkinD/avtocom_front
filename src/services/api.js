@@ -27,6 +27,29 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// Перехватчик для обработки ошибок - редирект на логин при 401
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Удаляем токен из localStorage
+      localStorage.removeItem('token')
+      localStorage.removeItem('permissions')
+      localStorage.removeItem('user')
+      
+      // Удаляем заголовок Authorization
+      delete api.defaults.headers.common['Authorization']
+      
+      // Перенаправляем на страницу авторизации
+      // Используем window.location для гарантированного редиректа
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login'
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default api
 
 // Методы для работы с API

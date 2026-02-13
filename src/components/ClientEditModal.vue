@@ -122,13 +122,23 @@
                 </div>
               </div>
               
-              <div class="col-span-2">
-                <label class="block text-sm text-gray-400 mb-1">Доверенное лицо</label>
-                <textarea
-                  v-model="form.PRED"
-                  rows="2"
-                  class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-                ></textarea>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Доверенное лицо</label>
+                  <textarea
+                    v-model="form.PRED"
+                    rows="2"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                  ></textarea>
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-400 mb-1">Примечание</label>
+                  <textarea
+                    v-model="form.NOTE"
+                    rows="2"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                  ></textarea>
+                </div>
               </div>
               
               <div>
@@ -351,7 +361,8 @@ const form = ref({
   PHONE: '',
   EMAIL: '',
   ADDRESS: '',
-  DELIVERY_ADDR: ''
+  DELIVERY_ADDR: '',
+  NOTE: ''
 })
 
 const originalData = ref({})
