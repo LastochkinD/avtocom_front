@@ -20,7 +20,7 @@
         </div>
         
         <!-- Tabs -->
-        <div class="border-b border-gray-700 overflow-x-auto">
+        <div class="border-b border-gray-700 overflow-x-auto overflow-y-hidden">
           <div class="flex px-2">
             <button
               v-for="tab in tabs"
