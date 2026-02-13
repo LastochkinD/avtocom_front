@@ -130,3 +130,21 @@ export const colorsApi = {
     return api.get('/colors/', { params })
   }
 }
+
+export const prihodApi = {
+  getAll(params = {}) {
+    return api.get('/prihod/', { params })
+  },
+  getById(id) {
+    return api.get(`/prihod/${id}`)
+  },
+  create(data) {
+    return api.post('/prihod/', data)
+  },
+  update(id, data) {
+    return api.put(`/prihod/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/prihod/${id}`)
+  }
+}
