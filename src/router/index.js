@@ -6,6 +6,8 @@ import ClientsView from '../views/ClientsView.vue'
 import CarsView from '../views/CarsView.vue'
 import NomenclatureView from '../views/NomenclatureView.vue'
 import PrihodView from '../views/PrihodView.vue'
+import RashodView from '../views/RashodView.vue'
+import DocsView from '../views/DocsView.vue'
 
 const routes = [
   {
@@ -38,10 +40,22 @@ const routes = [
     component: NomenclatureView,
     meta: { requiresAuth: true }
   },
-  {
+{
     path: '/sklad/prihod',
     name: 'prihod',
     component: PrihodView,
+    meta: { requiresAuth: true }
+  },
+{
+    path: '/sklad/rashod',
+    name: 'rashod',
+    component: RashodView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/service/zn',
+    name: 'zn',
+    component: DocsView,
     meta: { requiresAuth: true }
   },
   {

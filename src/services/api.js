@@ -148,3 +148,39 @@ export const prihodApi = {
     return api.delete(`/prihod/${id}`)
   }
 }
+
+export const rashodApi = {
+  getAll(params = {}) {
+    return api.get('/rashod/', { params })
+  },
+  getById(id) {
+    return api.get(`/rashod/${id}`)
+  },
+  create(data) {
+    return api.post('/rashod/', data)
+  },
+  update(id, data) {
+    return api.put(`/rashod/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/rashod/${id}`)
+  }
+}
+
+export const docsApi = {
+  getAll(params = {}) {
+    return api.get('/docs/', { params })
+  },
+  getById(id) {
+    return api.get(`/docs/${id}`)
+  },
+  create(data) {
+    return api.post('/docs/', data)
+  },
+  update(id, data) {
+    return api.put(`/docs/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/docs/${id}`)
+  }
+}

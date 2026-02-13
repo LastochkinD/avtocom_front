@@ -33,7 +33,7 @@
                 Главная
               </router-link>
             </li>
-            <li v-if="authStore.hasPermission('can_create_zn')">
+            <li>
               <router-link
                 to="/service/zn"
                 class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors"
@@ -100,6 +100,18 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
                 Перемещение
+              </router-link>
+            </li>
+            <li>
+              <router-link
+                to="/sklad/rashod"
+                class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-700/50 hover:text-white transition-colors"
+                active-class="bg-primary-500/20 text-primary-400"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Расход
               </router-link>
             </li>
           </ul>
@@ -221,13 +233,15 @@ const authStore = useAuthStore()
 
 const hasAnyServicePermission = computed(() => {
   return authStore.hasPermission('can_create_zn') || 
-         authStore.hasPermission('can_create_nakl')
+         authStore.hasPermission('can_create_nakl') ||
+         true // Заказ-наряды доступны всем
 })
 
 const hasAnySkladPermission = computed(() => {
   return authStore.hasPermission('can_add_parts') || 
          authStore.hasPermission('can_accept_prihod') ||
-         authStore.hasPermission('can_update_part_kol')
+         authStore.hasPermission('can_update_part_kol') ||
+         true // Расход доступен всем
 })
 
 const hasAnySpravochnikPermission = computed(() => {
