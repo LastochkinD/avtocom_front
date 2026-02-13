@@ -149,12 +149,11 @@
             <div class="bg-gray-700/50 rounded-lg p-4">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-white font-medium">Клиент</h3>
-                <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2">
                   <button
-                    v-if="client"
                     @click="openClientSearch"
                     class="p-1 text-gray-400 hover:text-primary-400 transition-colors"
-                    title="Сменить клиента"
+                    :title="client ? 'Сменить клиента' : 'Выбрать клиента'"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -493,8 +492,14 @@ const loadClient = async (clientId) => {
     const response = await clientsApi.getById(clientId)
     client.value = response.data
   } catch (err) {
-    console.error('Ошибка при загрузке клиента:', err)
-    client.value = null
+    // Если клиент не найден (404) - просто сбрасываем клиента
+    // Это нормальная ситуация, когда клиент был удален из базы
+    if (err.response?.status === 404) {
+      client.value = null
+    } else {
+      console.error('Ошибка при загрузке клиента:', err)
+      client.value = null
+    }
   }
 }
 
@@ -564,10 +569,17 @@ watch(() => props.car, async (newCar) => {
   }
 }, { immediate: true })
 
-watch(() => props.isOpen, (isOpen) => {
+watch(() => props.isOpen, async (isOpen) => {
   if (isOpen) {
     error.value = ''
-    client.value = null
+    // При открытии загружаем актуальные данные автомобиля
+    if (props.car) {
+      if (props.car.CLIENT_ID) {
+        await loadClient(props.car.CLIENT_ID)
+      } else {
+        client.value = null
+      }
+    }
   }
 })
 
@@ -583,7 +595,10 @@ watch(() => form.value.MARK_ID, async (newMarkId) => {
 const getChangedFields = () => {
   const changed = {}
   for (const key in form.value) {
-    if (form.value[key] !== originalData.value[key]) {
+    // Для CLIENT_ID всегда отправляем значение, так как это важное поле
+    if (key === 'CLIENT_ID') {
+      changed[key] = form.value[key]
+    } else if (form.value[key] !== originalData.value[key]) {
       changed[key] = form.value[key]
     }
   }
@@ -614,6 +629,7 @@ const openClientSearch = () => {
 
 const handleClientSelect = async (newClient) => {
   form.value.CLIENT_ID = newClient.ID
+  originalData.value.CLIENT_ID = newClient.ID
   client.value = newClient
   emit('change-client', newClient)
   clientSearchOpen.value = false
