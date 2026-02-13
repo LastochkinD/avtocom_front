@@ -161,7 +161,7 @@
                   </button>
                   <button
                     v-if="client"
-                    @click="$emit('edit-client', client)"
+                    @click="editClient"
                     class="p-1 text-gray-400 hover:text-primary-400 transition-colors"
                     title="Редактировать клиента"
                   >
@@ -171,7 +171,7 @@
                   </button>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div>
                   <label class="block text-sm text-gray-400 mb-1">Имя</label>
                   <div v-if="clientLoading" class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 flex items-center">
@@ -219,6 +219,24 @@
                     readonly
                     class="w-full bg-gray-600 border border-gray-500 rounded-lg px-4 py-2 text-white focus:outline-none resize-none"
                   ></textarea>
+                </div>
+                <div class="flex flex-col justify-end">
+                  <label class="block text-sm text-gray-400 mb-1">Долг</label>
+                  <div v-if="clientLoading" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 flex items-center h-[42px]">
+                    <svg class="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                  <label v-else class="flex items-center gap-3 cursor-pointer h-[42px]">
+                    <input
+                      type="checkbox"
+                      :checked="!!client?.DOLG"
+                      disabled
+                      class="w-5 h-5 rounded bg-gray-700 border border-gray-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-gray-800"
+                    />
+                    <span class="text-white text-sm">Имеет задолженность</span>
+                  </label>
                 </div>
               </div>
               
@@ -459,7 +477,7 @@ const props = defineProps({
   car: Object
 })
 
-const emit = defineEmits(['close', 'save', 'edit-client', 'change-client'])
+const emit = defineEmits(['close', 'save', 'edit-client', 'change-client', 'update-client'])
 
 const tabs = [
   { id: 'car', name: 'Автомобиль' },
@@ -609,6 +627,20 @@ watch(() => props.isOpen, async (isOpen) => {
   }
 })
 
+// Следим за изменениями selectedCar в родителе для обновления данных клиента
+watch(() => props.car, async (newCar) => {
+  if (newCar && props.isOpen) {
+    // Если изменился CLIENT_ID, перезагружаем клиента
+    if (newCar.CLIENT_ID && (!client.value || client.value.ID !== newCar.CLIENT_ID)) {
+      await loadClient(newCar.CLIENT_ID)
+    }
+    // Если обновились данные клиента (например, изменился DOLG)
+    if (client.value && newCar.DOLG !== undefined && client.value.DOLG !== newCar.DOLG) {
+      client.value = { ...client.value, DOLG: newCar.DOLG }
+    }
+  }
+}, { deep: true })
+
 watch(() => form.value.MARK_ID, async (newMarkId) => {
   if (newMarkId) {
     await loadModels(newMarkId)
@@ -659,5 +691,11 @@ const handleClientSelect = async (newClient) => {
   client.value = newClient
   emit('change-client', newClient)
   clientSearchOpen.value = false
+}
+
+const editClient = () => {
+  if (client.value) {
+    emit('edit-client', { ...client.value })
+  }
 }
 </script>

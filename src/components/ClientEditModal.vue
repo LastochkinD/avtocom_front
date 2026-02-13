@@ -289,6 +289,19 @@
                 class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
               />
             </div>
+            
+            <!-- Долг -->
+            <div class="col-span-2">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  :checked="!!form.DOLG"
+                  @change="form.DOLG = $event.target.checked ? 1 : 0"
+                  class="w-5 h-5 rounded bg-gray-700 border border-gray-600 text-primary-500 focus:ring-primary-500 focus:ring-offset-gray-800"
+                />
+                <span class="text-white text-sm">Имеет задолженность</span>
+              </label>
+            </div>
           </div>
         </form>
         
@@ -362,15 +375,21 @@ const form = ref({
   EMAIL: '',
   ADDRESS: '',
   DELIVERY_ADDR: '',
-  NOTE: ''
+  NOTE: '',
+  DOLG: 0
 })
 
 const originalData = ref({})
 
 watch(() => props.client, (newClient) => {
   if (newClient) {
-    form.value = { ...newClient }
-    originalData.value = { ...newClient }
+    // Ensure DOLG is properly initialized
+    const clientData = { 
+      ...newClient, 
+      DOLG: newClient.DOLG !== undefined ? newClient.DOLG : 0 
+    }
+    form.value = clientData
+    originalData.value = { ...clientData }
   }
 }, { immediate: true })
 

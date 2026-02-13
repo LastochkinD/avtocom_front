@@ -69,6 +69,7 @@
       @save="handleSave"
       @edit-client="editClient"
       @change-client="handleClientChange"
+      @update-client="handleClientUpdate"
     />
     
     <!-- Модальное окно редактирования клиента -->
@@ -154,7 +155,8 @@ const editClient = (client) => {
 
 const handleClientSave = (updatedClient) => {
   if (selectedCar.value) {
-    loadCars(skip.value)
+    // Обновляем данные клиента в модальном окне автомобиля
+    handleClientUpdate(updatedClient)
   }
 }
 
@@ -165,6 +167,20 @@ const handleClientChange = (newClient) => {
       CLIENT_ID: newClient.ID,
       CLIENT_NAME: newClient.CLIENT_NAME,
       PHONE: newClient.PHONE
+    }
+    const index = cars.value.findIndex(c => c.ID === selectedCar.value.ID)
+    if (index !== -1) {
+      cars.value[index] = { ...selectedCar.value }
+    }
+  }
+}
+
+const handleClientUpdate = (updatedClient) => {
+  // Обновляем данные клиента в selectedCar
+  if (selectedCar.value) {
+    selectedCar.value = {
+      ...selectedCar.value,
+      ...updatedClient
     }
     const index = cars.value.findIndex(c => c.ID === selectedCar.value.ID)
     if (index !== -1) {
