@@ -56,6 +56,21 @@
             <div class="text-gray-300">{{ item.CAR_ID || '-' }}</div>
           </template>
 
+          <!-- Слот для колонки Гос. номер -->
+          <template #NOMER="{ item }">
+            <div class="text-gray-300">{{ item.NOMER || '-' }}</div>
+          </template>
+
+          <!-- Слот для колонки Марка -->
+          <template #MARK_NAME="{ item }">
+            <div class="text-gray-300">{{ item.MARK_NAME || '-' }}</div>
+          </template>
+
+          <!-- Слот для колонки Модель -->
+          <template #MODEL_NAME="{ item }">
+            <div class="text-gray-300">{{ item.MODEL_NAME || '-' }}</div>
+          </template>
+
           <!-- Слот для колонки Клиент -->
           <template #CLIENT_ID="{ item }">
             <div class="text-gray-300">{{ item.CLIENT_ID || '-' }}</div>
@@ -76,24 +91,14 @@
             </span>
           </template>
 
-          <!-- Слот для колонки Закрыт -->
-          <template #CLOSED_BOOL="{ item }">
-            <span 
-              :class="item.CLOSED_BOOL ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'"
-              class="px-2 py-1 rounded text-xs font-medium"
-            >
-              {{ item.CLOSED_BOOL ? 'Да' : 'Нет' }}
-            </span>
+          <!-- Слот для колонки Владелец -->
+          <template #DOV_FIO="{ item }">
+            <div class="text-gray-300">{{ item.DOV_FIO || '-' }}</div>
           </template>
 
-          <!-- Слот для колонки Аванс -->
-          <template #AVANS="{ item }">
-            <div class="text-gray-300">{{ item.AVANS ? item.AVANS.toFixed(2) : '0.00' }}</div>
-          </template>
-
-          <!-- Слот для колонки НДС -->
-          <template #NDS="{ item }">
-            <div class="text-gray-300">{{ item.NDS || '0' }}%</div>
+          <!-- Слот для колонки Пробег -->
+          <template #PROBEG="{ item }">
+            <div class="text-gray-300">{{ item.PROBEG || '-' }}</div>
           </template>
           
           <!-- Слот для колонки Действия -->
@@ -132,14 +137,14 @@ const columns = [
   { key: 'OPEN_DATE', label: 'Дата открытия', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'CLOSE_DATE', label: 'Дата закрытия', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'CAR_ID', label: 'Авто', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'NOMER', label: 'Гос. номер', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'MARK_NAME', label: 'Марка', align: 'left', textClass: 'text-sm text-gray-300' },
+  { key: 'MODEL_NAME', label: 'Модель', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'CLIENT_ID', label: 'Клиент', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'DOV_FIO', label: 'Владелец', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'PROBEG', label: 'Пробег', align: 'right', textClass: 'text-sm text-gray-300' },
   { key: 'SUMMA', label: 'Сумма', align: 'right', textClass: 'text-sm text-gray-300' },
-  { key: 'AVANS', label: 'Аванс', align: 'right', textClass: 'text-sm text-gray-300' },
-  { key: 'NDS', label: 'НДС', align: 'center', textClass: 'text-sm text-gray-300', width: '60px' },
   { key: 'PAYED_BOOL', label: 'Оплачен', align: 'center', textClass: 'text-sm text-gray-300', width: '80px' },
-  { key: 'CLOSED_BOOL', label: 'Закрыт', align: 'center', textClass: 'text-sm text-gray-300', width: '80px' },
   { key: 'actions', label: 'Действия', align: 'right', width: '80px' }
 ]
 
