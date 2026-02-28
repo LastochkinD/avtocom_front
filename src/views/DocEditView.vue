@@ -262,6 +262,16 @@
           </form>
         </div>
 
+        <!-- Список работ -->
+        <div v-if="doc" class="mt-6">
+          <WorksTable
+            :doc-id="doc.ID"
+            @add-work="handleAddWork"
+            @edit-work="handleEditWork"
+            @refresh="refreshData"
+          />
+        </div>
+
         <!-- Список запчастей -->
         <div v-if="doc" class="mt-6">
           <PartsTable
@@ -282,6 +292,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { docsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
 import PartsTable from '../components/PartsTable.vue'
+import WorksTable from '../components/WorksTable.vue'
 
 const route = useRoute()
 const router = useRouter()

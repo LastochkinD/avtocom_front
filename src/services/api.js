@@ -205,3 +205,24 @@ export const rashodNApi = {
     return api.get('/rashod_n/', { params: { DOC_ID: docId } })
   }
 }
+
+export const worksApi = {
+  getAll(params = {}) {
+    return api.get('/works/', { params })
+  },
+  getById(id) {
+    return api.get(`/works/${id}`)
+  },
+  create(data) {
+    return api.post('/works/', data)
+  },
+  update(id, data) {
+    return api.put(`/works/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/works/${id}`)
+  },
+  getByDocId(docId) {
+    return api.get('/works/', { params: { DOC_ID: docId } })
+  }
+}
