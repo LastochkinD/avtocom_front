@@ -43,8 +43,13 @@
             <td class="px-3 py-2 text-gray-300">{{ work.CODE || '-' }}</td>
             <td class="px-3 py-2 text-white">{{ work.NAME }}</td>
             <td class="px-3 py-2 text-gray-300">{{ work.KOL }}</td>
-            <td class="px-3 py-2 text-gray-300">{{ work.PRICE ? work.PRICE.toFixed(2) : '0.00' }}</td>
-            <td class="px-3 py-2 text-white font-medium">{{ (work.PRICE * work.KOL).toFixed(2) }}</td>
+            <td class="px-3 py-2 text-gray-300">
+              <div>{{ work.PRICE ? work.PRICE.toFixed(2) : '0.00' }}</div>
+              <div v-if="props.skidkaW > 0" class="text-xs text-gray-400">
+                со скидкой: {{ getDiscountedPrice(work.PRICE).toFixed(2) }}
+              </div>
+            </td>
+            <td class="px-3 py-2 text-white font-medium">{{ (getDiscountedPrice(work.PRICE) * work.KOL).toFixed(2) }}</td>
             <td class="px-3 py-2 text-gray-300">{{ work.WORKER_ID || '-' }}</td>
             <td class="px-3 py-2 text-gray-300">{{ formatDate(work.CR_TIME) }}</td>
             <td class="px-3 py-2">
@@ -102,6 +107,10 @@ const props = defineProps({
   docId: {
     type: Number,
     required: true
+  },
+  skidkaW: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -130,9 +139,14 @@ const loadWorks = async () => {
 
 const totalWorksAmount = computed(() => {
   return works.value.reduce((total, work) => {
-    return total + (work.PRICE * work.KOL)
+    const discountedPrice = work.PRICE * (1 - props.skidkaW / 100)
+    return total + (discountedPrice * work.KOL)
   }, 0)
 })
+
+const getDiscountedPrice = (price) => {
+  return price * (1 - props.skidkaW / 100)
+}
 
 const formatDate = (dateString) => {
   if (!dateString) return '-'

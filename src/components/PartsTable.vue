@@ -45,8 +45,13 @@
             <td class="px-3 py-2 text-white">{{ part.NAME }}</td>
             <td class="px-3 py-2 text-gray-300">{{ part.KOL }}</td>
             <td class="px-3 py-2 text-gray-300">{{ part.UNIT_NAME || '-' }}</td>
-            <td class="px-3 py-2 text-gray-300">{{ part.PRICE ? part.PRICE.toFixed(2) : '0.00' }}</td>
-            <td class="px-3 py-2 text-white font-medium">{{ (part.PRICE * part.KOL).toFixed(2) }}</td>
+            <td class="px-3 py-2 text-gray-300">
+              <div>{{ part.PRICE ? part.PRICE.toFixed(2) : '0.00' }}</div>
+              <div v-if="props.skidkaP > 0" class="text-xs text-gray-400">
+                со скидкой: {{ getDiscountedPrice(part.PRICE).toFixed(2) }}
+              </div>
+            </td>
+            <td class="px-3 py-2 text-white font-medium">{{ (getDiscountedPrice(part.PRICE) * part.KOL).toFixed(2) }}</td>
             <td class="px-3 py-2 text-gray-300">{{ part.WORKER_ID || '-' }}</td>
             <td class="px-3 py-2 text-gray-300">{{ formatDate(part.CR_TIME) }}</td>
             <td class="px-3 py-2">
@@ -104,6 +109,10 @@ const props = defineProps({
   docId: {
     type: Number,
     required: true
+  },
+  skidkaP: {
+    type: Number,
+    default: 0
   }
 })
 
@@ -132,9 +141,14 @@ const loadParts = async () => {
 
 const totalPartsAmount = computed(() => {
   return parts.value.reduce((total, part) => {
-    return total + (part.PRICE * part.KOL)
+    const discountedPrice = part.PRICE * (1 - props.skidkaP / 100)
+    return total + (discountedPrice * part.KOL)
   }, 0)
 })
+
+const getDiscountedPrice = (price) => {
+  return price * (1 - props.skidkaP / 100)
+}
 
 const formatDate = (dateString) => {
   if (!dateString) return '-'

@@ -164,6 +164,32 @@
                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                       />
                     </div>
+
+                    <!-- Скидка на работы -->
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-2">Скидка на работы (%)</label>
+                      <input
+                        v-model="form.SKIDKA_W"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+
+                    <!-- Скидка на запчасти -->
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-2">Скидка на запчасти (%)</label>
+                      <input
+                        v-model="form.SKIDKA_P"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="100"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -266,6 +292,7 @@
         <div v-if="doc" class="mt-6">
           <WorksTable
             :doc-id="doc.ID"
+            :skidka-w="form.SKIDKA_W || 0"
             @add-work="handleAddWork"
             @edit-work="handleEditWork"
             @refresh="refreshData"
@@ -276,10 +303,30 @@
         <div v-if="doc" class="mt-6">
           <PartsTable
             :doc-id="doc.ID"
+            :skidka-p="form.SKIDKA_P || 0"
             @add-part="handleAddPart"
             @edit-part="handleEditPart"
             @refresh="refreshData"
           />
+        </div>
+
+        <!-- Итоговая информация -->
+        <div v-if="doc" class="mt-6 bg-gray-800 rounded-xl border border-gray-700/50 p-6">
+          <h3 class="text-white font-medium mb-4">Итоговая информация</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-700/50 rounded-lg p-4">
+              <div class="text-sm text-gray-400 mb-2">Скидка на работы</div>
+              <div class="text-lg font-bold text-white">{{ form.SKIDKA_W || 0 }}%</div>
+            </div>
+            <div class="bg-gray-700/50 rounded-lg p-4">
+              <div class="text-sm text-gray-400 mb-2">Скидка на запчасти</div>
+              <div class="text-lg font-bold text-white">{{ form.SKIDKA_P || 0 }}%</div>
+            </div>
+            <div class="bg-gray-700/50 rounded-lg p-4">
+              <div class="text-sm text-gray-400 mb-2">Общая сумма</div>
+              <div class="text-lg font-bold text-white">{{ calculateTotalAmount().toFixed(2) }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -351,6 +398,8 @@ const loadDoc = async () => {
       SUMMA: doc.value.SUMMA || null,
       AVANS: doc.value.AVANS || null,
       NDS: doc.value.NDS || null,
+      SKIDKA_W: doc.value.SKIDKA_W || 0,
+      SKIDKA_P: doc.value.SKIDKA_P || 0,
       PAYED_BOOL: doc.value.PAYED_BOOL || false,
       CLOSED_BOOL: doc.value.CLOSED_BOOL || false,
       NOTE: doc.value.NOTE || null
@@ -421,6 +470,12 @@ const handleEditPart = (part) => {
 const refreshData = () => {
   // TODO: Обновить данные заказ-наряда при изменении запчастей
   console.log('Обновить данные')
+}
+
+const calculateTotalAmount = () => {
+  // This is a placeholder - in a real implementation, you would fetch the actual work and part totals
+  // For now, we'll return the form.SUMMA value
+  return form.value.SUMMA || 0
 }
 
 const formatDateForInput = (dateString) => {
