@@ -184,3 +184,24 @@ export const docsApi = {
     return api.delete(`/docs/${id}`)
   }
 }
+
+export const rashodNApi = {
+  getAll(params = {}) {
+    return api.get('/rashod_n/', { params })
+  },
+  getById(id) {
+    return api.get(`/rashod_n/${id}`)
+  },
+  create(data) {
+    return api.post('/rashod_n/', data)
+  },
+  update(id, data) {
+    return api.put(`/rashod_n/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/rashod_n/${id}`)
+  },
+  getByDocId(docId) {
+    return api.get('/rashod_n/', { params: { DOC_ID: docId } })
+  }
+}

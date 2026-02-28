@@ -261,6 +261,16 @@
             </div>
           </form>
         </div>
+
+        <!-- Список запчастей -->
+        <div v-if="doc" class="mt-6">
+          <PartsTable
+            :doc-id="doc.ID"
+            @add-part="handleAddPart"
+            @edit-part="handleEditPart"
+            @refresh="refreshData"
+          />
+        </div>
       </div>
     </main>
   </div>
@@ -271,6 +281,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { docsApi } from '../services/api'
 import SidebarMenu from '../components/SidebarMenu.vue'
+import PartsTable from '../components/PartsTable.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -384,6 +395,21 @@ const save = async () => {
 const resetForm = () => {
   form.value = { ...originalData.value }
   formError.value = ''
+}
+
+const handleAddPart = () => {
+  // TODO: Реализовать добавление запчасти
+  console.log('Добавить запчасть для заказ-наряда:', doc.value.ID)
+}
+
+const handleEditPart = (part) => {
+  // TODO: Реализовать редактирование запчасти
+  console.log('Редактировать запчасть:', part)
+}
+
+const refreshData = () => {
+  // TODO: Обновить данные заказ-наряда при изменении запчастей
+  console.log('Обновить данные')
 }
 
 const formatDateForInput = (dateString) => {
