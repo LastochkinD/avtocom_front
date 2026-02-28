@@ -8,6 +8,7 @@ import NomenclatureView from '../views/NomenclatureView.vue'
 import PrihodView from '../views/PrihodView.vue'
 import RashodView from '../views/RashodView.vue'
 import DocsView from '../views/DocsView.vue'
+import DocEditView from '../views/DocEditView.vue'
 
 const routes = [
   {
@@ -56,6 +57,12 @@ const routes = [
     path: '/service/zn',
     name: 'zn',
     component: DocsView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/service/zn/edit/:id',
+    name: 'doc-edit',
+    component: DocEditView,
     meta: { requiresAuth: true }
   },
   {

@@ -34,7 +34,7 @@
               v-for="column in columns"
               :key="column.key"
               :class="[
-                'px-4 py-3',
+                'px-4 py-2',
                 column.align === 'right' ? 'text-right' : column.align === 'center' ? 'text-center' : 'text-left'
               ]"
             >
