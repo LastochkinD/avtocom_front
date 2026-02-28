@@ -71,11 +71,6 @@
             <div class="text-gray-300">{{ item.MODEL_NAME || '-' }}</div>
           </template>
 
-          <!-- Слот для колонки Клиент -->
-          <template #CLIENT_ID="{ item }">
-            <div class="text-gray-300">{{ item.CLIENT_ID || '-' }}</div>
-          </template>
-
           <!-- Слот для колонки Сумма -->
           <template #SUMMA="{ item }">
             <div class="text-white font-medium">{{ item.SUMMA ? item.SUMMA.toFixed(2) : '0.00' }}</div>
@@ -89,11 +84,6 @@
             >
               {{ item.PAYED_BOOL ? 'Да' : 'Нет' }}
             </span>
-          </template>
-
-          <!-- Слот для колонки Владелец -->
-          <template #DOV_FIO="{ item }">
-            <div class="text-gray-300">{{ item.DOV_FIO || '-' }}</div>
           </template>
 
           <!-- Слот для колонки Пробег -->
@@ -140,7 +130,6 @@ const columns = [
   { key: 'NOMER', label: 'Гос. номер', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'MARK_NAME', label: 'Марка', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'MODEL_NAME', label: 'Модель', align: 'left', textClass: 'text-sm text-gray-300' },
-  { key: 'CLIENT_ID', label: 'Клиент', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'DOV_FIO', label: 'Владелец', align: 'left', textClass: 'text-sm text-gray-300' },
   { key: 'PROBEG', label: 'Пробег', align: 'right', textClass: 'text-sm text-gray-300' },
   { key: 'SUMMA', label: 'Сумма', align: 'right', textClass: 'text-sm text-gray-300' },
