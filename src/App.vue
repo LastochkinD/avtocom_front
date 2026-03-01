@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
     <SidebarMenu v-if="!isLoginPage" />
-    <div :class="{ 'ml-64': !isLoginPage }">
+    <div>
       <router-view />
     </div>
   </div>
