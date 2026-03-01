@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: localStorage.getItem('token') || null,
-    permissions: JSON.parse(localStorage.getItem('permissions') || 'null') || null,
+    token: null,
+    permissions: null,
     loading: false,
     error: null
   }),
@@ -72,7 +72,7 @@ export const useAuthStore = defineStore('auth', {
       delete api.defaults.headers.common['Authorization']
     },
 
-    checkAuth() {
+    async checkAuth() {
       const token = localStorage.getItem('token')
       const permissions = localStorage.getItem('permissions')
       const user = localStorage.getItem('user')
@@ -84,9 +84,31 @@ export const useAuthStore = defineStore('auth', {
         
         // Восстанавливаем заголовок Authorization
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        return true
+        
+        // Проверяем валидность токена на сервере
+        try {
+          const response = await api.get('/auth/me')
+          // Если запрос успешен, токен валиден
+          // Обновляем данные пользователя, если они изменились
+          const { id, username: userName, permissions } = response.data
+          this.user = { id, username: userName }
+          this.permissions = permissions
+          
+          // Обновляем localStorage
+          localStorage.setItem('permissions', JSON.stringify(permissions))
+          localStorage.setItem('user', JSON.stringify(this.user))
+          
+          return true
+        } catch (error) {
+          // Если токен недействителен, очищаем данные
+          this.logout()
+          return false
+        }
+      } else {
+        // Если данных нет в localStorage, очищаем состояние
+        this.logout()
+        return false
       }
-      return false
     }
   }
 })

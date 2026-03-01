@@ -76,11 +76,16 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
   // Проверяем авторизацию при каждом переходе
-  authStore.checkAuth()
+  try {
+    await authStore.checkAuth()
+  } catch (error) {
+    // Если произошла ошибка при проверке, считаем пользователя неавторизованным
+    console.error('Ошибка проверки аутентификации:', error)
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')
