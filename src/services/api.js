@@ -238,3 +238,9 @@ export const worksBaseApi = {
     return api.put(`/works_base/${id}`, data)
   }
 }
+
+export const worksGroupsApi = {
+  getAll(params = {}) {
+    return api.get('/works_groups/', { params })
+  }
+}

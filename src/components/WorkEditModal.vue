@@ -62,11 +62,11 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">Группа работ</label>
-          <input
-            v-model="formData.WORKS_GROUP_NAME"
-            type="text"
-            class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-primary-500"
-            placeholder="Введите группу работ"
+          <Dropdown
+            v-model="formData.WG_ID"
+            :options="worksGroupsOptions"
+            placeholder="Выберите группу работ"
+            @change="onGroupChange"
           />
         </div>
 
@@ -92,7 +92,9 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
+import { worksGroupsApi } from '../services/api'
+import Dropdown from './Dropdown.vue'
 
 const props = defineProps({
   isOpen: {
@@ -116,26 +118,60 @@ const formData = ref({
   WORKS_GROUP_NAME: ''
 })
 
+const worksGroups = ref([])
+const worksGroupsOptions = computed(() => {
+  return worksGroups.value.map(group => ({
+    value: group.ID,
+    label: group.WORKS_GROUP_NAME
+  }))
+})
+
+// Загрузка групп работ
+const loadWorksGroups = async () => {
+  try {
+    const response = await worksGroupsApi.getAll()
+    worksGroups.value = response.data
+  } catch (err) {
+    console.error('Ошибка при загрузке групп работ:', err)
+  }
+}
+
+// Обработка выбора группы
+const onGroupChange = (selectedOption) => {
+  const selectedGroup = worksGroups.value.find(group => group.ID === selectedOption.value)
+  if (selectedGroup) {
+    formData.value.WG_ID = selectedGroup.ID
+    formData.value.WORKS_GROUP_NAME = selectedGroup.WORKS_GROUP_NAME
+  }
+}
+
 // Синхронизация модального окна с пропсами
 watch(() => props.isOpen, (newVal) => {
   isModalOpen.value = newVal
-  if (newVal && props.work) {
-    // Заполняем форму данными из редактируемой работы
-    formData.value = {
-      CODE: props.work.CODE || '',
-      NAME: props.work.NAME || '',
-      KOL: props.work.KOL || 0,
-      PRICE: props.work.PRICE || 0,
-      WORKS_GROUP_NAME: props.work.WORKS_GROUP_NAME || ''
-    }
-  } else if (newVal) {
-    // Очищаем форму для новой работы
-    formData.value = {
-      CODE: '',
-      NAME: '',
-      KOL: 0,
-      PRICE: 0,
-      WORKS_GROUP_NAME: ''
+  if (newVal) {
+    // Загружаем группы работ при открытии модального окна
+    loadWorksGroups()
+    
+    if (props.work) {
+      // Заполняем форму данными из редактируемой работы
+      formData.value = {
+        CODE: props.work.CODE || '',
+        NAME: props.work.NAME || '',
+        KOL: props.work.KOL || 0,
+        PRICE: props.work.PRICE || 0,
+        WG_ID: props.work.WG_ID || null,
+        WORKS_GROUP_NAME: props.work.WORKS_GROUP_NAME || ''
+      }
+    } else {
+      // Очищаем форму для новой работы
+      formData.value = {
+        CODE: '',
+        NAME: '',
+        KOL: 0,
+        PRICE: 0,
+        WG_ID: null,
+        WORKS_GROUP_NAME: ''
+      }
     }
   }
 })
