@@ -1,5 +1,10 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <SidebarMenu />
+    
+    <!-- Основной контент -->
+    <main class="ml-64 min-h-screen">
+      <div class="p-6 space-y-6">
     <!-- Заголовок -->
     <div class="flex justify-between items-center">
       <div>
@@ -31,7 +36,7 @@
           <thead class="bg-gray-700/80">
             <tr>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">ID</th>
-              <th class="px-4 py-3 text-left text-gray-300 font-medium">WG_ID</th>
+              <th class="px-4 py-3 text-left text-gray-300 font-medium">Группа</th>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Код</th>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Название</th>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Количество</th>
@@ -41,7 +46,7 @@
           <tbody class="divide-y divide-gray-600/50">
             <tr v-for="work in works" :key="work.ID" class="hover:bg-gray-700/50">
               <td class="px-4 py-3 text-gray-300">{{ work.ID }}</td>
-              <td class="px-4 py-3 text-gray-300">{{ work.WG_ID }}</td>
+              <td class="px-4 py-3 text-white font-medium">{{ work.WORKS_GROUP_NAME || '-' }}</td>
               <td class="px-4 py-3 text-white font-medium">{{ work.CODE }}</td>
               <td class="px-4 py-3 text-gray-300">{{ work.NAME }}</td>
               <td class="px-4 py-3 text-gray-300">{{ work.KOL }}</td>
@@ -80,6 +85,8 @@
         <div class="text-2xl font-bold text-white">{{ totalPrice.toFixed(2) }}</div>
       </div>
     </div>
+      </div>
+    </main>
   </div>
 </template>
 
