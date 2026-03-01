@@ -226,3 +226,9 @@ export const worksApi = {
     return api.get('/works/', { params: { DOC_ID: docId } })
   }
 }
+
+export const worksBaseApi = {
+  getAll(params = {}) {
+    return api.get('/works_base/', { params })
+  }
+}

@@ -5,6 +5,7 @@ import DashboardView from '../views/DashboardView.vue'
 import ClientsView from '../views/ClientsView.vue'
 import CarsView from '../views/CarsView.vue'
 import NomenclatureView from '../views/NomenclatureView.vue'
+import WorksBaseView from '../views/WorksBaseView.vue'
 import PrihodView from '../views/PrihodView.vue'
 import RashodView from '../views/RashodView.vue'
 import DocsView from '../views/DocsView.vue'
@@ -39,6 +40,12 @@ const routes = [
     path: '/spravochnik/nomenclature',
     name: 'nomenclature',
     component: NomenclatureView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/spravochnik/works_base',
+    name: 'works_base',
+    component: WorksBaseView,
     meta: { requiresAuth: true }
   },
 {
