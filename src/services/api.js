@@ -236,6 +236,9 @@ export const worksBaseApi = {
   },
   update(id, data) {
     return api.put(`/works_base/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/works_base/${id}`)
   }
 }
 
