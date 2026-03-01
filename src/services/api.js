@@ -245,5 +245,14 @@ export const worksBaseApi = {
 export const worksGroupsApi = {
   getAll(params = {}) {
     return api.get('/works_groups/', { params })
+  },
+  create(data) {
+    return api.post('/works_groups/', data)
+  },
+  update(id, data) {
+    return api.put(`/works_groups/${id}`, data)
+  },
+  delete(id) {
+    return api.delete(`/works_groups/${id}`)
   }
 }
