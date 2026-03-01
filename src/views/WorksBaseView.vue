@@ -13,6 +13,15 @@
       </div>
       <div class="flex gap-2">
         <button
+          @click="addWork"
+          class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Добавить работу
+        </button>
+        <button
           @click="refreshWorks"
           class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors"
         >
@@ -41,6 +50,7 @@
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Название</th>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Количество</th>
               <th class="px-4 py-3 text-left text-gray-300 font-medium">Цена</th>
+              <th class="px-4 py-3 text-left text-gray-300 font-medium">Действия</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-600/50">
@@ -51,9 +61,20 @@
               <td class="px-4 py-3 text-gray-300">{{ work.NAME }}</td>
               <td class="px-4 py-3 text-gray-300">{{ work.KOL }}</td>
               <td class="px-4 py-3 text-white font-medium">{{ work.PRICE ? work.PRICE.toFixed(2) : '0.00' }}</td>
+              <td class="px-4 py-3 text-right">
+                <button
+                  @click="editWork(work)"
+                  class="text-primary-400 hover:text-primary-300 p-1"
+                  title="Редактировать"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+              </td>
             </tr>
             <tr v-if="loading">
-              <td :colspan="6" class="px-4 py-6 text-center text-gray-400">
+              <td :colspan="7" class="px-4 py-6 text-center text-gray-400">
                 <div class="flex justify-center items-center space-x-2">
                   <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
                   <span>Загрузка данных...</span>
@@ -61,7 +82,7 @@
               </td>
             </tr>
             <tr v-if="!loading && works.length === 0">
-              <td :colspan="6" class="px-4 py-6 text-center text-gray-400">
+              <td :colspan="7" class="px-4 py-6 text-center text-gray-400">
                 Справочник работ пуст
               </td>
             </tr>
@@ -87,16 +108,28 @@
     </div>
       </div>
     </main>
+
+    <!-- Модальное окно редактирования работы -->
+    <WorkEditModal
+      :is-open="isModalOpen"
+      :work="selectedWork"
+      @close="isModalOpen = false"
+      @save="handleSave"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { worksBaseApi } from '../services/api'
+import WorkEditModal from '../components/WorkEditModal.vue'
 
 const works = ref([])
 const loading = ref(false)
 const error = ref('')
+
+const isModalOpen = ref(false)
+const selectedWork = ref(null)
 
 const loadWorks = async () => {
   loading.value = true
@@ -125,6 +158,40 @@ const totalPrice = computed(() => {
 
 const refreshWorks = () => {
   loadWorks()
+}
+
+const addWork = () => {
+  selectedWork.value = null
+  isModalOpen.value = true
+}
+
+const editWork = (work) => {
+  selectedWork.value = work
+  isModalOpen.value = true
+}
+
+const handleSave = async (workData) => {
+  try {
+    if (selectedWork.value) {
+      // Редактирование существующей работы
+      await worksBaseApi.update(selectedWork.value.ID, workData)
+      // Обновляем данные в списке
+      const index = works.value.findIndex(w => w.ID === selectedWork.value.ID)
+      if (index !== -1) {
+        works.value[index] = { ...works.value[index], ...workData }
+      }
+    } else {
+      // Добавление новой работы
+      const response = await worksBaseApi.create(workData)
+      works.value.unshift(response.data)
+    }
+    isModalOpen.value = false
+    // Перезагружаем список для обновления всех данных
+    loadWorks()
+  } catch (err) {
+    console.error('Ошибка при сохранении работы:', err)
+    error.value = err.response?.data?.detail || 'Ошибка при сохранении работы'
+  }
 }
 
 // Загружаем данные при монтировании

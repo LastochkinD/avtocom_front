@@ -230,5 +230,11 @@ export const worksApi = {
 export const worksBaseApi = {
   getAll(params = {}) {
     return api.get('/works_base/', { params })
+  },
+  create(data) {
+    return api.post('/works_base/', data)
+  },
+  update(id, data) {
+    return api.put(`/works_base/${id}`, data)
   }
 }
