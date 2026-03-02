@@ -62,42 +62,119 @@
             <p class="text-red-400">{{ formError }}</p>
           </div>
 
+          <!-- Вкладки -->
+          <div class="border-b border-gray-700/50 mb-6">
+            <nav class="-mb-px flex space-x-8">
+              <button
+                @click="activeTab = 'main'"
+                :class="[
+                  'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+                  activeTab === 'main' 
+                    ? 'text-primary-400 border-primary-400' 
+                    : 'text-gray-400 border-transparent hover:text-gray-300 hover:border-gray-300'
+                ]"
+              >
+                Основная информация
+              </button>
+              <button
+                @click="activeTab = 'client'"
+                :class="[
+                  'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+                  activeTab === 'client' 
+                    ? 'text-primary-400 border-primary-400' 
+                    : 'text-gray-400 border-transparent hover:text-gray-300 hover:border-gray-300'
+                ]"
+              >
+                Клиент
+              </button>
+              <button
+                @click="activeTab = 'additional'"
+                :class="[
+                  'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+                  activeTab === 'additional' 
+                    ? 'text-primary-400 border-primary-400' 
+                    : 'text-gray-400 border-transparent hover:text-gray-300 hover:border-gray-300'
+                ]"
+              >
+                Дополнительная информация
+              </button>
+            </nav>
+          </div>
+
           <!-- Форма -->
           <form @submit.prevent="save" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Основная информация -->
+            <!-- Вкладка: Основная информация -->
+            <div v-show="activeTab === 'main'" class="space-y-6">
+              <div class="bg-gray-700/50 rounded-lg p-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <!-- Номер -->
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-2">Номер *</label>
+                    <input
+                      v-model="form.NUM"
+                      type="text"
+                      required
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+
+                  <!-- Дата открытия -->
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-2">Дата открытия</label>
+                    <input
+                      v-model="form.OPEN_DATE"
+                      type="date"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+
+                  <!-- Дата закрытия -->
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-2">Дата закрытия</label>
+                    <input
+                      v-model="form.CLOSE_DATE"
+                      type="date"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+
+                  <!-- Пробег -->
+                  <div>
+                    <label class="block text-sm text-gray-400 mb-2">Пробег</label>
+                    <input
+                      v-model="form.PROBEG"
+                      type="number"
+                      step="1"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+
+                  <!-- Владелец -->
+                  <div class="md:col-span-4">
+                    <label class="block text-sm text-gray-400 mb-2">Владелец</label>
+                    <input
+                      v-model="form.DOV_FIO"
+                      type="text"
+                      class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Вкладка: Клиент -->
+            <div v-show="activeTab === 'client'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-6">
                 <div class="bg-gray-700/50 rounded-lg p-4">
-                  <h3 class="text-white font-medium mb-4">Основная информация</h3>
+                  <h3 class="text-white font-medium mb-4">Информация о клиенте</h3>
                   
                   <div class="space-y-4">
-                    <!-- Номер -->
+                    <!-- Клиент -->
                     <div>
-                      <label class="block text-sm text-gray-400 mb-2">Номер *</label>
+                      <label class="block text-sm text-gray-400 mb-2">Клиент</label>
                       <input
-                        v-model="form.NUM"
+                        v-model="form.CLIENT_ID"
                         type="text"
-                        required
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                      />
-                    </div>
-
-                    <!-- Дата открытия -->
-                    <div>
-                      <label class="block text-sm text-gray-400 mb-2">Дата открытия</label>
-                      <input
-                        v-model="form.OPEN_DATE"
-                        type="date"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                      />
-                    </div>
-
-                    <!-- Дата закрытия -->
-                    <div>
-                      <label class="block text-sm text-gray-400 mb-2">Дата закрытия</label>
-                      <input
-                        v-model="form.CLOSE_DATE"
-                        type="date"
                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                       />
                     </div>
@@ -111,25 +188,61 @@
                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                       />
                     </div>
+                  </div>
+                </div>
+              </div>
 
-                    <!-- Пробег -->
-                    <div>
-                      <label class="block text-sm text-gray-400 mb-2">Пробег</label>
-                      <input
-                        v-model="form.PROBEG"
-                        type="number"
-                        step="1"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                      />
+              <!-- Статусы -->
+              <div class="space-y-6">
+                <div class="bg-gray-700/50 rounded-lg p-4">
+                  <h3 class="text-white font-medium mb-4">Статусы</h3>
+                  
+                  <div class="space-y-4">
+                    <div class="grid grid-cols-1 gap-4">
+                      <div>
+                        <label class="flex items-center gap-2 text-sm text-gray-400">
+                          <input
+                            v-model="form.PAYED_BOOL"
+                            type="checkbox"
+                            class="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                          />
+                          Оплачен
+                        </label>
+                      </div>
+                      <div>
+                        <label class="flex items-center gap-2 text-sm text-gray-400">
+                          <input
+                            v-model="form.CLOSED_BOOL"
+                            type="checkbox"
+                            class="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
+                          />
+                          Закрыт
+                        </label>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Вкладка: Дополнительная информация -->
+            <div v-show="activeTab === 'additional'" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-6">
+                <div class="bg-gray-700/50 rounded-lg p-4">
+                  <h3 class="text-white font-medium mb-4">Примечание</h3>
+                  <textarea
+                    v-model="form.NOTE"
+                    rows="6"
+                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                    placeholder="Дополнительные комментарии..."
+                  ></textarea>
                 </div>
 
                 <!-- Финансовая информация -->
                 <div class="bg-gray-700/50 rounded-lg p-4">
                   <h3 class="text-white font-medium mb-4">Финансовая информация</h3>
                   
-                  <div class="space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Сумма -->
                     <div>
                       <label class="block text-sm text-gray-400 mb-2">Сумма</label>
@@ -194,13 +307,12 @@
                 </div>
               </div>
 
-              <!-- Справочные данные -->
+              <!-- Автомобиль и техническая информация -->
               <div class="space-y-6">
                 <div class="bg-gray-700/50 rounded-lg p-4">
-                  <h3 class="text-white font-medium mb-4">Справочные данные</h3>
+                  <h3 class="text-white font-medium mb-4">Автомобиль</h3>
                   
                   <div class="space-y-4">
-                    <!-- Автомобиль -->
                     <div>
                       <label class="block text-sm text-gray-400 mb-2">Автомобиль</label>
                       <input
@@ -209,52 +321,23 @@
                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
                       />
                     </div>
-
-                    <!-- Клиент -->
-                    <div>
-                      <label class="block text-sm text-gray-400 mb-2">Клиент</label>
-                      <input
-                        v-model="form.CLIENT_ID"
-                        type="text"
-                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                      />
-                    </div>
-
-                    <!-- Статусы -->
-                    <div class="grid grid-cols-2 gap-4">
-                      <div>
-                        <label class="flex items-center gap-2 text-sm text-gray-400">
-                          <input
-                            v-model="form.PAYED_BOOL"
-                            type="checkbox"
-                            class="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
-                          />
-                          Оплачен
-                        </label>
-                      </div>
-                      <div>
-                        <label class="flex items-center gap-2 text-sm text-gray-400">
-                          <input
-                            v-model="form.CLOSED_BOOL"
-                            type="checkbox"
-                            class="w-4 h-4 text-primary-500 bg-gray-700 border-gray-600 rounded focus:ring-primary-500"
-                          />
-                          Закрыт
-                        </label>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
-                <!-- Примечание -->
                 <div class="bg-gray-700/50 rounded-lg p-4">
-                  <h3 class="text-white font-medium mb-4">Примечание</h3>
-                  <textarea
-                    v-model="form.NOTE"
-                    rows="4"
-                    class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-                    placeholder="Дополнительные комментарии..."
-                  ></textarea>
+                  <h3 class="text-white font-medium mb-4">Техническая информация</h3>
+                  
+                  <div class="space-y-4">
+                    <div>
+                      <label class="block text-sm text-gray-400 mb-2">Пробег</label>
+                      <input
+                        v-model="form.PROBEG"
+                        type="number"
+                        step="1"
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -349,6 +432,7 @@ const error = ref('')
 const doc = ref(null)
 const saving = ref(false)
 const formError = ref('')
+const activeTab = ref('main')
 
 const form = ref({
   ID: null,
